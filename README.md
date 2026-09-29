@@ -1,6 +1,6 @@
-# frontend-nextjs-template
+# conecthus-frontend-av
 
-Template base de frontend com **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **TanStack Query**, **Zod** e **Vitest**.
+Frontend criado a partir do template [frontend-nextJS-template](https://github.com/Nobrinho/frontend-nextJS-template), com **Next.js 16 (App Router)**, **React 19**, **TypeScript**, **Tailwind CSS v4**, **TanStack Query**, **Zod** e **Vitest**.
 
 ## Começando
 
