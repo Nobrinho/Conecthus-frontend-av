@@ -70,7 +70,8 @@ src/
 ├── components/
 │   ├── ui/                 # Button, TextField, Dialog, Drawer, Toast, Pagination...
 │   ├── layout/             # AppShell, Sidebar, menu do usuário, ThemeSwitcher
-│   └── brand/              # logo e ilustrações em SVG
+│   ├── icons/              # ícones extraídos dos vetores do XD (currentColor)
+│   └── brand/              # logo e ilustrações do XD em SVG (cores por token)
 ├── styles/
 │   ├── tokens/primitives.css   # camada 1: paleta e escalas do XD
 │   └── themes/default.css      # camada 2: contrato semântico (claro/escuro)
@@ -117,7 +118,7 @@ O teste `src/styles/tokens.test.ts` impede cor crua em componentes e confere que
 
 - **Escala fluida:** tudo é medido em `rem`. Até 1920px a raiz tem 16px, que corresponde 1:1 ao XD (desenhado em 1920). Acima disso a raiz cresce com a largura (`100vw / 120`, até 32px), então em 4K o layout é o XD ampliado 2×, e não uma miniatura.
 - **Celular:** a sidebar vira gaveta (hambúrguer), a tabela vira lista de cartões com alvos de toque de 44px, o formulário fica em 1 coluna, o painel "Visualizar" ocupa a tela toda e os toasts ficam em largura total.
-- **720p:** a sidebar pode ser recolhida para só ícones (estado salvo em cookie).
+- **720p:** a sidebar pode ser recolhida para o trilho "WL." só com ícones, como no XD (estado salvo em cookie).
 - O E2E valida as 4 resoluções × 2 temas: sem rolagem horizontal e sem violações WCAG 2 AA no axe.
 
 ## Decisões e trade-offs
@@ -128,7 +129,9 @@ O teste `src/styles/tokens.test.ts` impede cor crua em componentes e confere que
 - **Edição e senha:** a API nunca devolve a senha, então não há como pré-preenchê-la. Em branco, a senha atual é mantida; preenchida, segue a regra do cadastro.
 - **Login por e-mail ou matrícula:** o campo do protótipo se chama "Usuário". O backend decide pelo formato (só dígitos = matrícula).
 - **Contraste:** onde a cor do XD não atingia WCAG AA, foi usado o tom vizinho da mesma paleta. O botão teal passou de `#0290A4` (3,8:1) para `#017A8B` (5:1), o texto do toast verde é escuro e o vermelho do toast é `#D93A39`. O logotipo mantém as cores originais, porque logos são isentos (WCAG 1.4.3).
-- **Textos de toasts transitórios:** os toasts de edição, exclusão e cancelamento somem rápido demais no protótipo para ler o texto. Os textos seguem o padrão do "Cadastro Realizado!" visível.
+- **Fidelidade ao XD:** medidas, ícones, logo e ilustrações vêm direto dos arquivos do protótipo (vetores e px do artboard de 1920 ÷ 16 = rem), assim como as cores de hover e os textos dos toasts. O único texto sem tela no XD é o toast "Edição cancelada". O seletor de tema e o botão de menu do celular não existem no protótipo e usam ícones do `lucide-react`.
+- **Datas no fuso de quem vê:** a API responde em UTC e as datas são formatadas no fuso do navegador. A data da Home usa o padrão do Next para conteúdo dependente do cliente (script inline antes da pintura), sem erro de hidratação.
+- **Menu do avatar:** abre ao passar o mouse, como no protótipo, e também por clique, toque e teclado.
 - **Sem TanStack Query:** com leitura em Server Components e escrita em Server Actions, não sobrou estado de servidor no cliente. Remover a biblioteca deixou o bundle e o código menores.
 - **`<dialog>` nativo** para modais, painel e menu mobile: foco preso, Esc, fundo inerte e retorno de foco sem biblioteca.
 

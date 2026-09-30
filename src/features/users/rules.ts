@@ -23,3 +23,12 @@ export function sanitizeName(value: string): string {
 export function sanitizeRegistration(value: string): string {
   return value.replace(/\D/g, "").slice(0, USER_RULES.registration.maxLength);
 }
+
+/** "Itens por página" da lista (o primeiro é o padrão). A API aceita até 100. */
+export const USERS_PAGE_SIZES = [15, 50, 80, 100] as const;
+
+/** Lê `?limit=` aceitando só os tamanhos oferecidos. */
+export function parsePageSize(value: unknown): number {
+  const size = Number(value);
+  return (USERS_PAGE_SIZES as readonly number[]).includes(size) ? size : USERS_PAGE_SIZES[0];
+}

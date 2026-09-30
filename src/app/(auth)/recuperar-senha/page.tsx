@@ -8,8 +8,11 @@ export const metadata: Metadata = { title: "Recuperação de senha" };
 
 export default function ForgotPasswordPage() {
   return (
-    <AuthShell aside={<LockResetIllustration className="w-[20rem] xl:w-[24rem]" />}>
-      <Logo className="text-fg mb-10 hidden text-4xl md:inline-flex" />
+    <AuthShell
+      aside={<LockResetIllustration className="w-[22rem] xl:w-[28.8125rem]" />}
+      className="md:px-[2.5625rem] md:pt-[3.125rem] xl:max-w-[45rem]"
+    >
+      <Logo className="text-logo-ink mb-16 hidden h-9 lg:block" />
       <ForgotPasswordForm />
     </AuthShell>
   );

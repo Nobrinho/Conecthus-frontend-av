@@ -8,6 +8,7 @@ import { paginatedUsersSchema, userSchema } from "../types";
 
 export interface ListUsersParams {
   page?: number;
+  limit?: number;
   search?: string;
 }
 
@@ -19,10 +20,10 @@ export interface UserPayload {
 }
 
 export const usersApi = {
-  list: ({ page = 1, search }: ListUsersParams) =>
+  list: ({ page = 1, limit, search }: ListUsersParams) =>
     authHttp.get("/users", {
       schema: paginatedUsersSchema,
-      query: { page, search: search || undefined },
+      query: { page, limit, search: search || undefined },
     }),
 
   get: (id: string) => authHttp.get(`/users/${id}`, { schema: userSchema }),

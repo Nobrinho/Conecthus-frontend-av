@@ -11,7 +11,7 @@ export function Splash() {
       aria-hidden
       className="bg-chrome text-chrome-fg animate-splash pointer-events-none fixed inset-0 z-40 grid place-items-center"
     >
-      <Logo className="text-5xl md:text-7xl" />
+      <Logo className="h-14 md:h-[5.9375rem]" />
     </div>
   );
 }

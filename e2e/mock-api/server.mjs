@@ -171,17 +171,18 @@ createServer(async (req, res) => {
   if (method === "GET" && path === "/users") {
     const search = (url.searchParams.get("search") ?? "").toLowerCase();
     const page = Math.max(1, Number(url.searchParams.get("page")) || 1);
+    const limit = Math.min(100, Math.max(1, Number(url.searchParams.get("limit")) || PAGE_SIZE));
     const filtered = users
       .filter((u) => u.name.toLowerCase().includes(search))
       .sort((a, b) => a.name.localeCompare(b.name));
     const total = filtered.length;
-    const totalPages = total === 0 ? 0 : Math.ceil(total / PAGE_SIZE);
+    const totalPages = total === 0 ? 0 : Math.ceil(total / limit);
     return send(res, 200, {
-      data: filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+      data: filtered.slice((page - 1) * limit, page * limit),
       meta: {
         total,
         page,
-        limit: PAGE_SIZE,
+        limit,
         totalPages,
         hasNextPage: page < totalPages,
         hasPreviousPage: page > 1,

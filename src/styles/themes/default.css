@@ -19,7 +19,9 @@
   --bg: light-dark(var(--palette-gray-100), var(--palette-navy-950));
   --surface: light-dark(var(--palette-gray-0), var(--palette-navy-800));
   --surface-muted: light-dark(var(--palette-gray-50), var(--palette-navy-700));
-  --overlay: light-dark(rgb(13 25 49 / 0.45), rgb(0 0 0 / 0.6));
+  /* Fundo atrás de modais e do painel lateral: desfoque + escurecimento leve (XD). */
+  --overlay: light-dark(rgb(0 0 0 / 0.07), rgb(0 0 0 / 0.5));
+  --overlay-blur: 0.1875rem;
 
   /* Texto */
   --fg: light-dark(var(--palette-ink-900), var(--palette-ink-100));
@@ -27,28 +29,55 @@
 
   /* Marca */
   --brand: light-dark(var(--palette-teal-700), var(--palette-teal-400));
-  --brand-hover: light-dark(var(--palette-teal-800), var(--palette-teal-300));
+  --brand-hover: light-dark(var(--palette-teal-850), var(--palette-teal-300));
+  /* Hover dos botões grandes das telas de acesso ("Entrar", "Recuperar"). */
+  --brand-hover-strong: light-dark(var(--palette-pine-700), var(--palette-teal-300));
+  /* Fundo do hover de botões contornados ("Cancelar", "Não") e do item "Sair". */
+  --brand-soft: light-dark(rgb(0 96 109 / 0.25), rgb(60 196 216 / 0.2));
   --brand-fg: light-dark(var(--palette-gray-0), var(--palette-navy-950));
   --accent: var(--palette-teal-500);
   --accent-fg: var(--palette-navy-900);
+  /* "Lock" do logo sobre fundo claro (recuperação de senha). */
+  --logo-ink: light-dark(var(--palette-navy-900), var(--palette-ink-100));
 
   /* Bordas e foco */
   --border: light-dark(var(--palette-gray-300), var(--palette-navy-600));
   --border-strong: light-dark(var(--palette-gray-500), var(--palette-gray-400));
+  --field-border: light-dark(var(--palette-gray-180), var(--palette-navy-600));
+  --field-border-active: light-dark(var(--palette-gray-450), var(--palette-gray-400));
+  --search-border: light-dark(var(--palette-gray-475), var(--palette-navy-600));
+  --control-hover: light-dark(var(--palette-gray-150), var(--palette-navy-700));
+  --disabled: light-dark(var(--palette-gray-175), var(--palette-navy-700));
+  --disabled-fg: light-dark(var(--palette-gray-500), var(--palette-gray-400));
+  --outline-strong: light-dark(var(--palette-indigo-800), var(--palette-ink-100));
   --focus: var(--palette-teal-500);
 
   /* Estrutura escura (sidebar, splash, cabeçalho da tabela) */
   --chrome: light-dark(var(--palette-navy-900), var(--palette-navy-600));
   --chrome-fg: light-dark(var(--palette-gray-0), var(--palette-ink-100));
   --chrome-muted: var(--palette-sage-300);
+  /* Item do menu lateral: hover e selecionado. */
+  --chrome-hover: var(--palette-teal-850);
+  --chrome-selected: var(--palette-teal-500);
+  --chrome-selected-fg: var(--palette-navy-900);
 
   /* Feedback */
   --success: var(--palette-green-400);
   --success-fg: var(--palette-ink-900);
   --danger: light-dark(var(--palette-red-600), var(--palette-red-500));
   --danger-fg: light-dark(var(--palette-gray-0), var(--palette-navy-950));
+  /* Campo com erro: texto (label, mensagem) e fundo. */
+  --danger-text: light-dark(var(--palette-red-800), var(--palette-red-500));
+  --danger-surface: light-dark(var(--palette-gray-50), var(--palette-navy-700));
   --warning: var(--palette-orange-400);
   --warning-fg: var(--palette-ink-900);
+
+  /* Ilustrações (vetores do XD). */
+  --illustration-ink: light-dark(var(--palette-indigo-900), var(--palette-ink-100));
+  --illustration-paper: light-dark(var(--palette-gray-0), var(--palette-navy-700));
+  --illustration-accent: var(--palette-teal-500);
+  --illustration-accent-strong: light-dark(var(--palette-teal-850), var(--palette-teal-300));
+  --illustration-brand: light-dark(var(--palette-teal-600), var(--palette-teal-400));
 }
 
 :root[data-theme="light"] {

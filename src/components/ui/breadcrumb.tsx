@@ -1,5 +1,6 @@
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+
+import { ChevronRightIcon } from "@/components/icons";
 
 export interface BreadcrumbItem {
   label: string;
@@ -9,12 +10,12 @@ export interface BreadcrumbItem {
 export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
   return (
     <nav aria-label="Trilha de navegação">
-      <ol className="text-fg flex flex-wrap items-center gap-1 text-[0.625rem] font-medium">
+      <ol className="text-fg text-2xs flex flex-wrap items-center gap-1 font-medium">
         {items.map((item, index) => (
           <li key={item.label} className="flex items-center gap-1">
-            {index > 0 && <ChevronRight aria-hidden className="size-3" />}
+            {index > 0 && <ChevronRightIcon className="size-3" />}
             {item.href ? (
-              <Link href={item.href} className="hover:text-brand hover:underline">
+              <Link href={item.href} className="hover:text-brand-hover hover:underline">
                 {item.label}
               </Link>
             ) : (

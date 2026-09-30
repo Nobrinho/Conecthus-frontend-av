@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { formatDate, formatRegistration } from "./format";
-import { sanitizeName, sanitizeRegistration } from "./rules";
+import { parsePageSize, sanitizeName, sanitizeRegistration } from "./rules";
 
 describe("sanitizeName", () => {
   it.each([
@@ -28,8 +28,20 @@ describe("format", () => {
     expect(formatRegistration("123")).toBe("123");
   });
 
-  it("formata datas no fuso de Brasília", () => {
-    expect(formatDate("2024-05-08T12:00:00.000Z")).toBe("08/05/2024");
-    expect(formatDate("2024-05-09T01:00:00.000Z")).toBe("08/05/2024");
+  it("formata datas no fuso de quem vê", () => {
+    expect(formatDate("2024-05-08T12:00:00.000Z", "UTC")).toBe("08/05/2024");
+    // 03:30 UTC ainda é dia 08 em Manaus (UTC-4), mas já é dia 09 em UTC.
+    expect(formatDate("2024-05-09T03:30:00.000Z", "America/Manaus")).toBe("08/05/2024");
+    expect(formatDate("2024-05-09T03:30:00.000Z", "UTC")).toBe("09/05/2024");
   });
+});
+
+describe("parsePageSize", () => {
+  it.each([
+    [undefined, 15],
+    ["50", 50],
+    ["100", 100],
+    ["20", 15],
+    ["abc", 15],
+  ])("%j → %j", (input, expected) => expect(parsePageSize(input)).toBe(expected));
 });

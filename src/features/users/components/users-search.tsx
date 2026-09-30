@@ -38,7 +38,7 @@ export function UsersSearch({ initialValue }: { initialValue: string }) {
       onValueChange={setValue}
       label="Pesquisa"
       maxLength={30}
-      className="w-full md:w-[15rem]"
+      className="w-full md:w-[17.8125rem]"
     />
   );
 }

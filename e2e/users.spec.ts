@@ -20,11 +20,20 @@ async function fillUser(page: Page, data: Partial<Record<string, string>> = {}) 
 
 test("lista com paginação de 15 itens", async ({ page }) => {
   await expect(rows(page)).toHaveCount(16); // cabeçalho + 15
-  await expect(page.getByText(/Total de itens\s*17/)).toBeVisible();
+  await expect(page.getByText(/Total de itens:\s*17/)).toBeVisible();
 
   await page.getByRole("link", { name: "Próxima página" }).click();
   await expect(page).toHaveURL(/page=2/);
   await expect(rows(page)).toHaveCount(3);
+});
+
+test("itens por página troca o tamanho da página", async ({ page }) => {
+  await page.getByRole("link", { name: "Próxima página" }).click();
+  await page.getByLabel("Itens por página").selectOption("50");
+  await expect(page).toHaveURL(/limit=50/);
+  await expect(page).not.toHaveURL(/page=2/);
+  await expect(rows(page)).toHaveCount(18); // cabeçalho + 17
+  await expect(page.getByText("de 1", { exact: true })).toBeVisible();
 });
 
 test("pesquisa por nome e estado sem resultado", async ({ page }) => {
@@ -45,6 +54,7 @@ test("pesquisa por nome e estado sem resultado", async ({ page }) => {
 test("visualiza os dados no painel lateral", async ({ page }) => {
   await page.getByRole("button", { name: "Visualizar Adriano Machado Souza" }).click();
   const drawer = page.getByRole("dialog", { name: "Visualizar Usuário" });
+  await expect(drawer).toHaveAttribute("data-state", "open");
   await expect(drawer).toContainText("200.001");
   await expect(drawer).toContainText("08/05/2024");
   await expect(drawer).toContainText("Nenhuma");
@@ -70,7 +80,7 @@ test("cadastra com validação e toast", async ({ page }) => {
 
   await expect(page.getByText("Cadastro Realizado!")).toBeVisible();
   await expect(page).toHaveURL(/\/usuarios$/);
-  await expect(page.getByText(/Total de itens\s*18/)).toBeVisible();
+  await expect(page.getByText(/Total de itens:\s*18/)).toBeVisible();
 });
 
 test("matrícula duplicada é apontada no campo", async ({ page }) => {
@@ -97,7 +107,7 @@ test("cancelar com dados pede confirmação", async ({ page }) => {
   await page.getByRole("button", { name: "Cancelar" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Sim" }).click();
   await expect(page).toHaveURL(/\/usuarios$/);
-  await expect(page.getByText("Cadastro Cancelado!")).toBeVisible();
+  await expect(page.getByText("Cadastro cancelado")).toBeVisible();
 });
 
 test("edita: Salvar só habilita após alteração", async ({ page }) => {
@@ -110,7 +120,7 @@ test("edita: Salvar só habilita após alteração", async ({ page }) => {
   await expect(save).toBeEnabled();
   await save.click();
 
-  await expect(page.getByText("Edição Realizada!")).toBeVisible();
+  await expect(page.getByText("Dados salvos com sucesso!")).toBeVisible();
   await expect(page.getByRole("cell", { name: "Adriano Souza", exact: true })).toBeVisible();
 });
 
@@ -120,9 +130,9 @@ test("exclui após confirmar", async ({ page }) => {
   await expect(dialog).toContainText("O usuário será excluído.");
   await dialog.getByRole("button", { name: "Sim" }).click();
 
-  await expect(page.getByText("Usuário Excluído!")).toBeVisible();
+  await expect(page.getByText("Exclusão Realizada!")).toBeVisible();
   await expect(page.getByRole("cell", { name: "Adriano Machado Souza", exact: true })).toHaveCount(
     0,
   );
-  await expect(page.getByText(/Total de itens\s*16/)).toBeVisible();
+  await expect(page.getByText(/Total de itens:\s*16/)).toBeVisible();
 });

@@ -30,6 +30,7 @@ export function LoginForm({ next }: { next: string | null }) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -43,6 +44,10 @@ export function LoginForm({ next }: { next: string | null }) {
       const result = await loginAction(values);
       if (!result.ok) {
         toast.error(result.error);
+        // Credenciais recusadas: marca os campos (a mensagem já está no toast).
+        for (const field of ["login", "password"] as const) {
+          if (result.fieldErrors?.[field]) setError(field, { type: "server", message: "" });
+        }
         return;
       }
       const destination = safeNext(next);
@@ -59,32 +64,49 @@ export function LoginForm({ next }: { next: string | null }) {
   return (
     <>
       {entering && <LoginTransition />}
-      <h1 className="text-brand text-4xl font-bold md:text-5xl">Bem-vindo!</h1>
-      <p className="mt-6 text-lg font-medium">Entre com sua conta</p>
+      <h1 className="text-brand md:text-display text-5xl font-bold">Bem-vindo!</h1>
+      <p className="text-heading mt-6 font-medium md:mt-[1.875rem]">Entre com sua conta</p>
 
-      <form onSubmit={onSubmit} noValidate className="mt-6 flex flex-col gap-2">
+      <form
+        onSubmit={onSubmit}
+        noValidate
+        className="mt-8 flex flex-col gap-[2.125rem] md:mt-[2.1875rem]"
+      >
         <TextField
           label="Usuário"
+          placeholderLabel="E-mail ou N° matrícula"
+          appearance="outlined"
           autoComplete="username"
-          hint="E-mail ou matrícula"
-          error={errors.login?.message}
+          error={errors.login?.message || undefined}
+          invalid={Boolean(errors.login)}
           {...register("login")}
         />
         <TextField
           label="Senha"
           type="password"
+          appearance="outlined"
           revealable
           autoComplete="current-password"
-          error={errors.password?.message}
+          error={errors.password?.message || undefined}
+          invalid={Boolean(errors.password)}
           {...register("password")}
         />
-        <Button type="submit" size="lg" className="mt-2 w-full" disabled={pending || entering}>
+        <Button
+          type="submit"
+          variant="cta"
+          size="lg"
+          className="w-full"
+          disabled={pending || entering}
+        >
           {pending ? "Entrando..." : "Entrar"}
         </Button>
       </form>
 
-      <p className="mt-6 text-center">
-        <Link href={routes.forgotPassword} className="text-brand text-sm font-bold hover:underline">
+      <p className="mt-[1.875rem] text-center">
+        <Link
+          href={routes.forgotPassword}
+          className="text-brand hover:text-brand-hover text-lg font-bold transition-colors"
+        >
           Esqueci minha senha
         </Link>
       </p>

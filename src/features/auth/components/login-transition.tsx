@@ -8,10 +8,10 @@ export function LoginTransition() {
       aria-label="Entrando no sistema"
       className="bg-chrome text-chrome-fg fixed inset-0 z-40 grid place-items-center"
     >
-      <div className="flex w-full max-w-sm flex-col items-center gap-8 px-6">
-        <Logo className="text-5xl md:text-6xl" />
-        <div className="border-chrome-muted/60 h-4 w-full overflow-hidden rounded-sm border p-0.5">
-          <div className="bg-accent animate-progress h-full origin-left rounded-xs" />
+      <div className="flex w-full max-w-[35.25rem] flex-col items-center gap-16 px-6 md:gap-80">
+        <Logo className="h-14 md:h-[4.75rem]" />
+        <div className="border-chrome-fg h-[2.3125rem] w-full overflow-hidden rounded-lg border-2 p-1.5">
+          <div className="bg-accent animate-progress h-full origin-left rounded-sm" />
         </div>
       </div>
     </div>

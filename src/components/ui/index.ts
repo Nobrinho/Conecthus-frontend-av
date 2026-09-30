@@ -5,6 +5,8 @@ export { ConfirmDialog, type ConfirmDialogProps } from "./confirm-dialog";
 export { Dialog, type DialogProps } from "./dialog";
 export { Drawer, type DrawerProps } from "./drawer";
 export { EmptyState, type EmptyStateProps } from "./empty-state";
+export { LocalDate, type LocalDateProps } from "./local-date";
+export { PageSizeSelect, type PageSizeSelectProps } from "./page-size-select";
 export { Pagination, type PaginationProps } from "./pagination";
 export { SearchInput, type SearchInputProps } from "./search-input";
 export { SectionTitle } from "./section-title";
