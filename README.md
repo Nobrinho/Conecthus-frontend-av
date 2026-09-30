@@ -131,6 +131,8 @@ O teste `src/styles/tokens.test.ts` impede cor crua em componentes e confere que
 - **Contraste:** onde a cor do XD não atingia WCAG AA, foi usado o tom vizinho da mesma paleta. O botão teal passou de `#0290A4` (3,8:1) para `#017A8B` (5:1), o texto do toast verde é escuro e o vermelho do toast é `#D93A39`. O logotipo mantém as cores originais, porque logos são isentos (WCAG 1.4.3).
 - **Fidelidade ao XD:** medidas, ícones, logo e ilustrações vêm direto dos arquivos do protótipo (vetores e px do artboard de 1920 ÷ 16 = rem), assim como as cores de hover e os textos dos toasts. O único texto sem tela no XD é o toast "Edição cancelada". O seletor de tema e o botão de menu do celular não existem no protótipo e usam ícones do `lucide-react`.
 - **Datas no fuso de quem vê:** a API responde em UTC e as datas são formatadas no fuso do navegador. A data da Home usa o padrão do Next para conteúdo dependente do cliente (script inline antes da pintura), sem erro de hidratação.
+- **Ninguém exclui a própria conta:** na lista, o "Excluir" da linha do usuário logado fica desabilitado com a dica "Você não pode excluir seu próprio usuário". A Server Action recusa o pedido com o id da sessão e a API também (403), porque só a tela não basta.
+- **Nome completo:** o campo exige ao menos nome e sobrenome, na tela e na API.
 - **Menu do avatar:** abre ao passar o mouse, como no protótipo, e também por clique, toque e teclado.
 - **Sem TanStack Query:** com leitura em Server Components e escrita em Server Actions, não sobrou estado de servidor no cliente. Remover a biblioteca deixou o bundle e o código menores.
 - **`<dialog>` nativo** para modais, painel e menu mobile: foco preso, Esc, fundo inerte e retorno de foco sem biblioteca.

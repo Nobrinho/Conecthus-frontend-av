@@ -4,7 +4,12 @@
  * define os limites de tamanho que aparecem embaixo dos campos.
  */
 export const USER_RULES = {
-  name: { maxLength: 30, pattern: /^\p{L}+(?: \p{L}+)*$/u },
+  name: {
+    maxLength: 30,
+    pattern: /^\p{L}+(?: \p{L}+)*$/u,
+    /** "Nome Completo": ao menos nome e sobrenome. */
+    fullNamePattern: /^\p{L}+(?: \p{L}+)+$/u,
+  },
   email: { maxLength: 40 },
   registration: { minLength: 4, maxLength: 10, pattern: /^\d+$/ },
   password: { length: 6, pattern: /^[A-Za-z0-9]{6}$/ },

@@ -6,9 +6,12 @@ import { z } from "zod";
 import { routes } from "@/config/routes";
 import { type ActionResult, fail, ok } from "@/lib/action-result";
 import { ApiError } from "@/lib/api";
+import { getSessionUserId } from "@/lib/session";
 
 import { usersApi } from "./api/users.api";
 import { createUserSchema, updateUserSchema, type User, type UserFormValues } from "./types";
+
+const SELF_DELETE_MESSAGE = "Não é possível excluir o próprio usuário";
 
 /**
  * Converte o erro da API em mensagem para o formulário. O 409 traz em `field`
@@ -22,6 +25,7 @@ function toFailure(error: unknown, fallback: string): ActionResult<never> {
       return fail(message, { [details.field]: [message] });
     }
     if (error.status === 404) return fail("Usuário não encontrado.");
+    if (error.status === 403 && error.userMessage) return fail(error.userMessage);
     if (error.status === 400 && error.userMessage) return fail(error.userMessage);
   }
   console.error(error);
@@ -70,6 +74,10 @@ export async function updateUserAction(
 }
 
 export async function deleteUserAction(id: string): Promise<ActionResult> {
+  // A tela já desabilita o botão; aqui a regra vale para qualquer chamada. A
+  // API também recusa (403), então esta checagem só evita a ida até ela.
+  if (id === (await getSessionUserId())) return fail(SELF_DELETE_MESSAGE);
+
   try {
     await usersApi.remove(id);
     revalidatePath(routes.users);

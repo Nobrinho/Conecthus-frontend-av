@@ -69,6 +69,7 @@ test("cadastra com validação e toast", async ({ page }) => {
 
   await page.getByLabel("Nome Completo").pressSequentially("Paula 99");
   await expect(page.getByLabel("Nome Completo")).toHaveValue("Paula ");
+  await expect(page.getByText("Informe o nome completo (nome e sobrenome)")).toBeVisible();
   await page.getByLabel("Matrícula").pressSequentially("5a5b");
   await expect(page.getByLabel("Matrícula")).toHaveValue("55");
   await expect(page.getByText("Mínimo de 4 números")).toBeVisible();
@@ -122,6 +123,17 @@ test("edita: Salvar só habilita após alteração", async ({ page }) => {
 
   await expect(page.getByText("Dados salvos com sucesso!")).toBeVisible();
   await expect(page.getByRole("cell", { name: "Adriano Souza", exact: true })).toBeVisible();
+});
+
+test("não deixa excluir o próprio usuário", async ({ page }) => {
+  await page.getByRole("searchbox", { name: "Pesquisa" }).fill("millena");
+  await expect(page).toHaveURL(/search=millena/);
+  const self = page.getByRole("button", { name: "Excluir Millena Souza" });
+  await expect(self).toHaveAttribute("aria-disabled", "true");
+  await self.hover();
+  await expect(page.getByRole("tooltip")).toHaveText("Você não pode excluir seu próprio usuário");
+  await self.click({ force: true });
+  await expect(page.getByRole("dialog", { name: "Deseja excluir?" })).toHaveCount(0);
 });
 
 test("exclui após confirmar", async ({ page }) => {

@@ -63,14 +63,14 @@
 
   /* Feedback */
   --success: var(--palette-green-400);
-  --success-fg: var(--palette-gray-0);
+  --success-fg: var(--palette-ink-900);
   --danger: light-dark(var(--palette-red-600), var(--palette-red-500));
-  --danger-fg: var(--palette-gray-0);
+  --danger-fg: light-dark(var(--palette-gray-0), var(--palette-navy-950));
   /* Campo com erro: texto (label, mensagem) e fundo. */
   --danger-text: light-dark(var(--palette-red-800), var(--palette-red-500));
   --danger-surface: light-dark(var(--palette-gray-50), var(--palette-navy-700));
   --warning: var(--palette-orange-400);
-  --warning-fg: var(--palette-gray-0);
+  --warning-fg: var(--palette-ink-900);
 
   /* Ilustrações (vetores do XD). */
   --illustration-ink: light-dark(var(--palette-indigo-900), var(--palette-ink-100));

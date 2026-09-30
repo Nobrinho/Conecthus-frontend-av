@@ -56,6 +56,22 @@ describe("UserForm", () => {
     expect(await screen.findByText("As senhas não conferem")).toBeInTheDocument();
   });
 
+  it("exige nome completo (nome e sobrenome)", async () => {
+    renderWithProviders(<UserForm mode="create" />);
+    const ue = await fillValid();
+    const submit = screen.getByRole("button", { name: "Cadastrar" });
+
+    await ue.clear(screen.getByLabelText("Nome Completo"));
+    await ue.type(screen.getByLabelText("Nome Completo"), "Adriano");
+    expect(
+      await screen.findByText("Informe o nome completo (nome e sobrenome)"),
+    ).toBeInTheDocument();
+    expect(submit).toBeDisabled();
+
+    await ue.type(screen.getByLabelText("Nome Completo"), " Souza");
+    await waitFor(() => expect(submit).toBeEnabled());
+  });
+
   it("descarta caracteres inválidos no nome e na matrícula", async () => {
     renderWithProviders(<UserForm mode="create" />);
     const ue = userEvent.setup();

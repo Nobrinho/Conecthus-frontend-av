@@ -14,6 +14,8 @@ import { UsersSearch } from "./users-search";
 export interface UsersPageProps {
   result: PaginatedUsers;
   search: string;
+  /** Usuário logado: a linha dele não oferece "Excluir". */
+  currentUserId: string;
 }
 
 function hrefFor(page: number, search: string, limit: number) {
@@ -26,7 +28,7 @@ function hrefFor(page: number, search: string, limit: number) {
 }
 
 /** Telas 12, 13 e 19: lista, estado vazio e busca sem resultado. */
-export function UsersPage({ result, search }: UsersPageProps) {
+export function UsersPage({ result, search, currentUserId }: UsersPageProps) {
   const { data: users, meta } = result;
   const isEmpty = users.length === 0;
 
@@ -79,7 +81,7 @@ export function UsersPage({ result, search }: UsersPageProps) {
             </div>
           </div>
         ) : (
-          <UsersList users={users} />
+          <UsersList users={users} currentUserId={currentUserId} />
         )}
       </div>
 
