@@ -2,11 +2,23 @@ import "server-only";
 
 import { cookies } from "next/headers";
 
-import { ACCESS_COOKIE, cookieOptionsFor, REFRESH_COOKIE, type SessionTokens } from "./tokens";
+import {
+  ACCESS_COOKIE,
+  cookieOptionsFor,
+  readJwtSubject,
+  REFRESH_COOKIE,
+  type SessionTokens,
+} from "./tokens";
 
 /** Access token da requisição atual. O `proxy.ts` garante que ele esteja válido. */
 export async function getAccessToken(): Promise<string | undefined> {
   return (await cookies()).get(ACCESS_COOKIE)?.value;
+}
+
+/** Id do usuário da sessão (o `sub` do access token), ou `undefined` sem sessão. */
+export async function getSessionUserId(): Promise<string | undefined> {
+  const token = await getAccessToken();
+  return (token && readJwtSubject(token)) || undefined;
 }
 
 export async function getRefreshToken(): Promise<string | undefined> {

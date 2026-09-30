@@ -90,7 +90,8 @@ async function readJson(req) {
 }
 
 const RULES = {
-  name: /^\p{L}+(?: \p{L}+)*$/u,
+  // Nome completo: ao menos nome e sobrenome.
+  name: /^\p{L}+(?: \p{L}+)+$/u,
   registration: /^\d{4,10}$/,
   password: /^[A-Za-z0-9]{6}$/,
   email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
@@ -216,6 +217,7 @@ createServer(async (req, res) => {
 
     if (method === "GET") return send(res, 200, user);
     if (method === "DELETE") {
+      if (user.id === actor.id) return error(res, 403, "Não é possível excluir o próprio usuário");
       users = users.filter((u) => u.id !== user.id);
       return send(res, 204);
     }

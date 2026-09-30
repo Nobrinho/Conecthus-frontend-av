@@ -30,7 +30,8 @@ const name = z
   .trim()
   .min(1, REQUIRED)
   .max(USER_RULES.name.maxLength, `Máximo de ${USER_RULES.name.maxLength} caracteres`)
-  .regex(USER_RULES.name.pattern, "Use apenas letras");
+  .regex(USER_RULES.name.pattern, "Use apenas letras")
+  .regex(USER_RULES.name.fullNamePattern, "Informe o nome completo (nome e sobrenome)");
 
 const email = z
   .string()

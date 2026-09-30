@@ -29,13 +29,26 @@ export interface CookieOptions {
  * é a API a cada requisição.
  */
 export function readJwtExpiry(token: string): number | null {
+  const exp = readJwtPayload(token)?.exp;
+  return typeof exp === "number" ? exp : null;
+}
+
+/**
+ * Lê o `sub` (id do usuário) de um JWT, também sem verificar a assinatura.
+ * Serve para recusar cedo pedidos óbvios (ex.: excluir a própria conta); a
+ * API continua aplicando a mesma regra com o token validado.
+ */
+export function readJwtSubject(token: string): string | null {
+  const sub = readJwtPayload(token)?.sub;
+  return typeof sub === "string" ? sub : null;
+}
+
+function readJwtPayload(token: string): Record<string, unknown> | null {
   try {
     const payload = token.split(".")[1];
     if (!payload) return null;
-    const json = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/"))) as {
-      exp?: unknown;
-    };
-    return typeof json.exp === "number" ? json.exp : null;
+    const json: unknown = JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+    return json && typeof json === "object" ? (json as Record<string, unknown>) : null;
   } catch {
     return null;
   }
