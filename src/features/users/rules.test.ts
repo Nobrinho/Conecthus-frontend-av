@@ -39,6 +39,7 @@ describe("format", () => {
 describe("parsePageSize", () => {
   it.each([
     [undefined, 10],
+    ["15", 15],
     ["50", 50],
     ["100", 100],
     ["20", 10],

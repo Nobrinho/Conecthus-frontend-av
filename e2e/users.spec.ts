@@ -29,6 +29,13 @@ test("lista com paginação de 10 itens", async ({ page }) => {
 
 test("itens por página troca o tamanho da página", async ({ page }) => {
   await page.getByRole("link", { name: "Próxima página" }).click();
+  await expect(page.getByLabel("Itens por página").locator("option")).toHaveText([
+    "10",
+    "15",
+    "50",
+    "80",
+    "100",
+  ]);
   await page.getByLabel("Itens por página").selectOption("50");
   await expect(page).toHaveURL(/limit=50/);
   await expect(page).not.toHaveURL(/page=2/);

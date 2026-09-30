@@ -33,18 +33,18 @@ Com Docker, depois de subir a API: `docker compose up --build`. O front sobe em 
 
 ## Requisitos da avaliação → onde estão
 
-| Requisito (PDF / protótipo)                                                                                                      | Implementação                                                                                      |
-| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| Framework front-end (React)                                                                                                      | Next.js 16 + React 19                                                                              |
-| Tela de apresentação (Home), pág. 11                                                                                             | `src/app/(app)/page.tsx`                                                                           |
-| Lista de usuários, págs. 12/13: pesquisa por nome e paginação                                                                    | `src/features/users/components/users-page.tsx`, `users-search.tsx`, `components/ui/pagination.tsx` |
-| Cadastro, pág. 14                                                                                                                | `src/features/users/components/user-form.tsx` (`mode="create"`)                                    |
-| Nome só letras · E-mail válido · Matrícula só números · Senha 6 alfanuméricos                                                    | `src/features/users/rules.ts` e `types.ts` (as mesmas regras do backend)                           |
-| Salvar habilitado só com todos os campos válidos                                                                                 | `UserForm`: `isValid` do React Hook Form em `mode: "onChange"`                                     |
-| Todos os campos obrigatórios                                                                                                     | Schemas Zod + asterisco nos labels                                                                 |
-| Edição, pág. 23                                                                                                                  | `UserForm` (`mode="edit"`): Salvar habilita só com alteração válida                                |
-| Exclusão, pág. 13                                                                                                                | `users-list.tsx`: modal "Deseja excluir?" + toast                                                  |
-| Além do PDF: splash, login, recuperação de senha, loading, visualizar, modais de cancelar, toasts, estados vazio e sem resultado | `src/features/auth`, `src/features/users/components`                                               |
+| Requisito (PDF / protótipo)                                                                                                                                          | Implementação                                                                                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework front-end (React)                                                                                                                                          | Next.js 16 + React 19                                                                                                                                   |
+| Tela de apresentação (Home), pág. 11                                                                                                                                 | `src/app/(app)/page.tsx`                                                                                                                                |
+| Lista de usuários, págs. 12/13: pesquisa por nome e paginação                                                                                                        | `users-page.tsx`, `users-search.tsx`, `components/ui/pagination.tsx`. "Itens por página": 10, 15, 50, 80 ou 100 (padrão 10, os mesmos que a API aceita) |
+| Cadastro, pág. 14                                                                                                                                                    | `src/features/users/components/user-form.tsx` (`mode="create"`)                                                                                         |
+| Nome só letras · E-mail válido · Matrícula só números · Senha 6 alfanuméricos                                                                                        | `src/features/users/rules.ts` e `types.ts` (as mesmas regras do backend). O nome também exige nome e sobrenome ("Nome Completo" no protótipo)           |
+| Salvar habilitado só com todos os campos válidos                                                                                                                     | `UserForm`: `isValid` do React Hook Form em `mode: "onChange"`                                                                                          |
+| Todos os campos obrigatórios                                                                                                                                         | Schemas Zod + asterisco nos labels                                                                                                                      |
+| Edição, pág. 23                                                                                                                                                      | `UserForm` (`mode="edit"`): Salvar habilita só com alteração válida                                                                                     |
+| Exclusão, pág. 13                                                                                                                                                    | `users-list.tsx`: modal "Deseja excluir?" + toast. O "Excluir" da própria linha fica desabilitado, e a Server Action e a API recusam a autoexclusão     |
+| Além do PDF: splash, login, recuperação de senha, loading, visualizar, modais de cancelar, toasts, estados vazio e sem resultado, tema claro/escuro, menu recolhível | `src/features/auth`, `src/features/users/components`, `src/components/layout`                                                                           |
 
 Todas as 26 telas do protótipo foram mapeadas; os prints acima foram tirados do app real rodando contra a API.
 
@@ -133,6 +133,7 @@ O teste `src/styles/tokens.test.ts` impede cor crua em componentes e confere que
 - **Datas no fuso de quem vê:** a API responde em UTC e as datas são formatadas no fuso do navegador. A data da Home usa o padrão do Next para conteúdo dependente do cliente (script inline antes da pintura), sem erro de hidratação.
 - **Ninguém exclui a própria conta:** na lista, o "Excluir" da linha do usuário logado fica desabilitado com a dica "Você não pode excluir seu próprio usuário". A Server Action recusa o pedido com o id da sessão e a API também (403), porque só a tela não basta.
 - **Nome completo:** o campo exige ao menos nome e sobrenome, na tela e na API.
+- **Itens por página:** o padrão é 10 para a lista caber na tela sem rolagem e a paginação ficar sempre visível; 15 (o valor do protótipo), 50, 80 e 100 continuam no seletor.
 - **Menu do avatar:** abre ao passar o mouse, como no protótipo, e também por clique, toque e teclado.
 - **Sem TanStack Query:** com leitura em Server Components e escrita em Server Actions, não sobrou estado de servidor no cliente. Remover a biblioteca deixou o bundle e o código menores.
 - **`<dialog>` nativo** para modais, painel e menu mobile: foco preso, Esc, fundo inerte e retorno de foco sem biblioteca.
@@ -158,10 +159,10 @@ O teste `src/styles/tokens.test.ts` impede cor crua em componentes e confere que
 
 ## Testes
 
-- **Unitários (Vitest, 53 testes):** regras e schemas de usuário, caso a caso; sanitização e formatação; tokens de sessão; `ApiError`; o `UserForm` (botão desabilitado → habilitado, filtro de caracteres, 409 no campo, edição sem alteração, modal de cancelar); e o guarda-corpo dos tokens de tema.
-- **E2E (Playwright, 35 testes):** sobem uma **API fake** (`e2e/mock-api/server.mjs`) que espelha os endpoints do NestJS e o app em **build de produção**.
-  - `auth.spec.ts`: rota protegida, "Campo Obrigatório", toast de credenciais inválidas, login por e-mail e por matrícula, sair, persistência do tema, recuperação e redefinição de senha.
-  - `users.spec.ts`: paginação, busca, sem resultado, visualizar, cadastrar com validação, matrícula duplicada, cancelar, editar e excluir.
+- **Unitários (Vitest, 61 testes):** regras e schemas de usuário, caso a caso (inclusive nome completo e itens por página); sanitização e formatação de datas no fuso de quem vê; tokens de sessão (`exp` e `sub` do JWT); `ApiError`; o `UserForm` (botão desabilitado → habilitado, nome completo, filtro de caracteres, 409 no campo, edição sem alteração, modal de cancelar); e o guarda-corpo dos tokens de tema.
+- **E2E (Playwright, 38 testes):** sobem uma **API fake** (`e2e/mock-api/server.mjs`) que espelha os endpoints do NestJS e o app em **build de produção**.
+  - `auth.spec.ts`: rota protegida, "Campo Obrigatório", credenciais inválidas (toast e campos em vermelho), menu do avatar no hover, login por e-mail e por matrícula, sair, persistência do tema, recuperação e redefinição de senha.
+  - `users.spec.ts`: paginação de 10 e troca de "Itens por página", busca, sem resultado, visualizar no painel lateral, cadastrar com validação (inclusive nome completo), matrícula duplicada, cancelar, editar, excluir e o bloqueio de excluir o próprio usuário.
   - `responsive.spec.ts`: roda em 8 projetos (celular, 720p, 1080p e 4K × claro e escuro), checando rolagem horizontal e axe WCAG 2 AA.
 
 Para usar um Chromium já instalado, defina `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`. O E2E sobrescreve a pasta `.next`, então rode `npm run build` de novo antes de um `npm start` normal.

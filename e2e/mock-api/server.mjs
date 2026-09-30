@@ -7,7 +7,8 @@ import { createServer } from "node:http";
 
 const port = Number(process.env.MOCK_API_PORT ?? 4010);
 const PREFIX = "/api/v1";
-const PAGE_SIZE = 10;
+const PAGE_SIZES = [10, 15, 50, 80, 100];
+const PAGE_SIZE = PAGE_SIZES[0];
 const PASSWORD = "abc123";
 const RESET_TOKEN = "token-valido";
 
@@ -172,7 +173,10 @@ createServer(async (req, res) => {
   if (method === "GET" && path === "/users") {
     const search = (url.searchParams.get("search") ?? "").toLowerCase();
     const page = Math.max(1, Number(url.searchParams.get("page")) || 1);
-    const limit = Math.min(100, Math.max(1, Number(url.searchParams.get("limit")) || PAGE_SIZE));
+    const limitParam = url.searchParams.get("limit");
+    const limit = limitParam === null ? PAGE_SIZE : Number(limitParam);
+    // Como a API real: só os tamanhos do seletor "Itens por página".
+    if (!PAGE_SIZES.includes(limit)) return error(res, 400, "limit inválido");
     const filtered = users
       .filter((u) => u.name.toLowerCase().includes(search))
       .sort((a, b) => a.name.localeCompare(b.name));
