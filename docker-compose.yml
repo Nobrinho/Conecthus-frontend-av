@@ -1,0 +1,18 @@
+# Sobe o frontend em modo produção. A API (repositório Conecthus-backend-av)
+# roda no seu próprio docker-compose, publicada em localhost:3000.
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_APP_URL: http://localhost:3001
+    container_name: wenlock-web
+    restart: unless-stopped
+    environment:
+      # Dentro do container, "localhost" é o próprio container: a API do host
+      # é alcançada por host.docker.internal.
+      API_URL: http://host.docker.internal:3000/api/v1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "3001:3001"
