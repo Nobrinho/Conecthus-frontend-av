@@ -1,0 +1,60 @@
+/*
+ * Camada 2 — tokens semânticos (o "contrato" de tema).
+ *
+ * Cada token descreve um PAPEL na interface, não uma cor. Os valores usam
+ * `light-dark(claro, escuro)`, então o mesmo contrato atende os dois modos:
+ *
+ * - sem `data-theme` (ou `data-theme="system"`) o navegador segue o sistema;
+ * - `data-theme="light"` / `data-theme="dark"` força um modo.
+ *
+ * Para criar um tema novo (outra marca, alto contraste...), crie um arquivo em
+ * `styles/themes/` com um seletor `[data-theme="nome"]` redefinindo estes
+ * mesmos tokens, importe-o em `globals.css` e registre o nome em
+ * `src/config/theme.ts`. Nenhum componente precisa mudar.
+ */
+:root {
+  color-scheme: light dark;
+
+  /* Superfícies */
+  --bg: light-dark(var(--palette-gray-100), var(--palette-navy-950));
+  --surface: light-dark(var(--palette-gray-0), var(--palette-navy-800));
+  --surface-muted: light-dark(var(--palette-gray-50), var(--palette-navy-700));
+  --overlay: light-dark(rgb(13 25 49 / 0.45), rgb(0 0 0 / 0.6));
+
+  /* Texto */
+  --fg: light-dark(var(--palette-ink-900), var(--palette-ink-100));
+  --fg-muted: light-dark(var(--palette-gray-600), var(--palette-gray-400));
+
+  /* Marca */
+  --brand: light-dark(var(--palette-teal-700), var(--palette-teal-400));
+  --brand-hover: light-dark(var(--palette-teal-800), var(--palette-teal-300));
+  --brand-fg: light-dark(var(--palette-gray-0), var(--palette-navy-950));
+  --accent: var(--palette-teal-500);
+  --accent-fg: var(--palette-navy-900);
+
+  /* Bordas e foco */
+  --border: light-dark(var(--palette-gray-300), var(--palette-navy-600));
+  --border-strong: light-dark(var(--palette-gray-500), var(--palette-gray-400));
+  --focus: var(--palette-teal-500);
+
+  /* Estrutura escura (sidebar, splash, cabeçalho da tabela) */
+  --chrome: light-dark(var(--palette-navy-900), var(--palette-navy-600));
+  --chrome-fg: light-dark(var(--palette-gray-0), var(--palette-ink-100));
+  --chrome-muted: var(--palette-sage-300);
+
+  /* Feedback */
+  --success: var(--palette-green-400);
+  --success-fg: var(--palette-ink-900);
+  --danger: light-dark(var(--palette-red-600), var(--palette-red-500));
+  --danger-fg: light-dark(var(--palette-gray-0), var(--palette-navy-950));
+  --warning: var(--palette-orange-400);
+  --warning-fg: var(--palette-ink-900);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
