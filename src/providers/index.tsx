@@ -1,8 +1,8 @@
 "use client";
 
-import { QueryProvider } from "./query-provider";
+import { ToastProvider } from "@/components/ui";
 
-/** Ponto único para compor os providers globais (tema, auth, i18n...). */
+/** Ponto único para compor os providers globais. */
 export function AppProviders({ children }: { children: React.ReactNode }) {
-  return <QueryProvider>{children}</QueryProvider>;
+  return <ToastProvider>{children}</ToastProvider>;
 }

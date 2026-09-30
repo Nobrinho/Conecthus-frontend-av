@@ -1,41 +1,37 @@
+import { cva, type VariantProps } from "class-variance-authority";
+
 import { cn } from "@/lib/utils";
 
-const variants = {
-  primary: "bg-foreground text-background hover:opacity-90",
-  secondary: "border border-border bg-transparent hover:bg-muted",
-  ghost: "bg-transparent hover:bg-muted",
-} as const;
+export const buttonVariants = cva(
+  [
+    "inline-flex shrink-0 items-center justify-center gap-2 rounded-sm font-bold whitespace-nowrap",
+    "transition-colors duration-150 select-none",
+    "disabled:pointer-events-none disabled:bg-surface-muted disabled:text-fg-muted disabled:border-transparent",
+  ],
+  {
+    variants: {
+      variant: {
+        primary: "bg-brand text-brand-fg hover:bg-brand-hover",
+        outline: "border border-fg bg-surface text-fg hover:bg-surface-muted",
+        ghost: "bg-transparent text-fg hover:bg-surface-muted",
+        link: "bg-transparent px-0 text-brand underline-offset-4 hover:underline",
+      },
+      size: {
+        sm: "h-9 px-3 text-sm",
+        md: "h-11 px-6 text-base",
+        lg: "h-14 px-8 text-lg",
+        icon: "size-10 p-0",
+      },
+    },
+    defaultVariants: { variant: "primary", size: "md" },
+  },
+);
 
-const sizes = {
-  sm: "h-8 px-3 text-sm",
-  md: "h-10 px-4",
-  lg: "h-12 px-6 text-lg",
-} as const;
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {}
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: keyof typeof variants;
-  size?: keyof typeof sizes;
-}
-
-export function Button({
-  className,
-  variant = "primary",
-  size = "md",
-  type = "button",
-  ...props
-}: ButtonProps) {
+export function Button({ className, variant, size, type = "button", ...props }: ButtonProps) {
   return (
-    <button
-      type={type}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors",
-        "focus-visible:ring-foreground/40 focus-visible:ring-2 focus-visible:outline-none",
-        "disabled:pointer-events-none disabled:opacity-50",
-        variants[variant],
-        sizes[size],
-        className,
-      )}
-      {...props}
-    />
+    <button type={type} className={cn(buttonVariants({ variant, size }), className)} {...props} />
   );
 }

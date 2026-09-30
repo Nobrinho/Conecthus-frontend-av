@@ -1,8 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, type RenderOptions } from "@testing-library/react";
 
-/** Render com os providers necessários, com QueryClient isolado por teste. */
+import { ToastProvider } from "@/components/ui";
+
+/** Render com os providers globais da aplicação. */
 export function renderWithProviders(ui: React.ReactElement, options?: RenderOptions) {
-  const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>, options);
+  return render(<ToastProvider>{ui}</ToastProvider>, options);
 }
