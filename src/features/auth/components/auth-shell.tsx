@@ -6,6 +6,8 @@ export interface AuthShellProps {
   aside?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  /** Anima a entrada (logo e cartão) depois da `Splash`. */
+  intro?: boolean;
 }
 
 /**
@@ -13,18 +15,23 @@ export interface AuthShellProps {
  * cartão do formulário à direita (medidas do XD em 1920: logo 612 px, cartão
  * 764×800). No celular sobra só o cartão, com o logo acima.
  */
-export function AuthShell({ aside, children, className }: AuthShellProps) {
+export function AuthShell({ aside, children, className, intro }: AuthShellProps) {
   return (
-    <main className="bg-chrome text-chrome-fg flex min-h-dvh items-center justify-center p-4 md:p-8 xl:justify-between xl:py-10 xl:pr-[6.9375rem] xl:pl-[14.6875rem]">
-      <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-12 xl:justify-between xl:gap-8">
+    <main className="bg-chrome text-chrome-fg flex min-h-dvh items-center justify-center p-4 md:p-8 xl:py-10">
+      {/* Em 1920 o conteúdo ocupa a tela toda (medidas do XD); acima disso fica
+          centralizado nessa mesma largura, sem afastar o logo do cartão. */}
+      <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:justify-center lg:gap-12 xl:mx-auto xl:w-[120rem] xl:max-w-full xl:justify-between xl:gap-8 xl:pr-[6.9375rem] xl:pl-[14.6875rem]">
         <div className="flex shrink justify-center">
-          <div className="hidden lg:block">
+          <div data-auth-logo className={cn("hidden lg:block", intro && "animate-reveal-logo")}>
             {aside ?? <Logo className="h-12 lg:h-14 xl:h-[5.9375rem]" />}
           </div>
-          <Logo className="h-10 lg:hidden" />
+          <div data-auth-logo className={cn("lg:hidden", intro && "animate-reveal-logo")}>
+            <Logo className="h-10" />
+          </div>
         </div>
         <section
           className={cn(
+            intro && "animate-form-in",
             "bg-surface text-fg shadow-overlay w-full max-w-[47.75rem] shrink-0 rounded-xl px-6 py-10 md:px-[3.5625rem] md:pt-12 md:pb-14 lg:w-[min(47.75rem,55vw)] xl:min-h-[50rem]",
             className,
           )}

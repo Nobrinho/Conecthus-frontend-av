@@ -18,13 +18,13 @@ async function fillUser(page: Page, data: Partial<Record<string, string>> = {}) 
   await page.getByLabel(/^Repetir Senha/).fill(data.password ?? "abc123");
 }
 
-test("lista com paginação de 15 itens", async ({ page }) => {
-  await expect(rows(page)).toHaveCount(16); // cabeçalho + 15
+test("lista com paginação de 10 itens", async ({ page }) => {
+  await expect(rows(page)).toHaveCount(11); // cabeçalho + 10
   await expect(page.getByText(/Total de itens:\s*17/)).toBeVisible();
 
   await page.getByRole("link", { name: "Próxima página" }).click();
   await expect(page).toHaveURL(/page=2/);
-  await expect(rows(page)).toHaveCount(3);
+  await expect(rows(page)).toHaveCount(8); // cabeçalho + 7
 });
 
 test("itens por página troca o tamanho da página", async ({ page }) => {
@@ -48,7 +48,7 @@ test("pesquisa por nome e estado sem resultado", async ({ page }) => {
   await expect(page.getByText("Nenhum Resultado Encontrado")).toBeVisible();
 
   await page.getByRole("button", { name: "Limpar pesquisa" }).click();
-  await expect(rows(page)).toHaveCount(16);
+  await expect(rows(page)).toHaveCount(11);
 });
 
 test("visualiza os dados no painel lateral", async ({ page }) => {

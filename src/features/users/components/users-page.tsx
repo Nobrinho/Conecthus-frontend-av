@@ -38,9 +38,9 @@ export function UsersPage({ result, search }: UsersPageProps) {
         <UsersSearch initialValue={search} />
         <Link
           href={routes.newUser}
-          className={cn(buttonVariants({ size: "md" }), "md:w-[13.9375rem]")}
+          className={cn(buttonVariants({ size: "md" }), "md:min-w-[13.9375rem]")}
         >
-          <PlusIcon className="size-[1.375rem]" />
+          <PlusIcon className="size-[1.375rem] shrink-0" />
           Cadastrar Usuário
         </Link>
       </div>

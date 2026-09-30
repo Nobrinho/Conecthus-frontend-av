@@ -18,7 +18,7 @@ export interface PaginationProps {
 const navButton = "grid h-11 w-8 place-items-center rounded-[0.3125rem]";
 
 /**
- * Rodapé da lista do protótipo: "Total de itens: N", "Itens por página 15" e a
+ * Rodapé da lista do protótipo: "Total de itens: N", "Itens por página 10" e a
  * navegação |‹ ‹ [n] › ›| "de N". Usa links (e não botões) para que cada
  * página tenha URL própria e funcione sem JavaScript.
  */

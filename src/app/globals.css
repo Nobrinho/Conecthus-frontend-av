@@ -94,8 +94,12 @@
   --breakpoint-xl: 120rem;
 
   --animate-progress: progress 1.4s var(--easing-standard) forwards;
-  --animate-splash: splash 1.6s var(--easing-standard) forwards;
+  --animate-splash: splash 2.2s linear forwards;
+  --animate-splash-logo: splash-logo 0.6s var(--easing-standard) backwards;
+  --animate-reveal-logo: reveal-logo 2.2s linear both;
+  --animate-form-in: form-in 0.8s var(--easing-standard) 1.4s backwards;
   --animate-toast-in: toast-in var(--duration-base) var(--easing-standard);
+  --animate-toast-out: toast-out var(--duration-base) var(--easing-standard) forwards;
   --animate-balloon-in: balloon-in var(--duration-fast) var(--easing-standard);
 
   @keyframes progress {
@@ -107,15 +111,37 @@
     }
   }
 
+  /* Abertura do login: 0–0,6s fade in, até 1,4s parado, 1,4–2,2s logo e cartão se movem */
   @keyframes splash {
     0%,
-    70% {
-      opacity: 1;
+    99% {
       visibility: visible;
     }
     100% {
-      opacity: 0;
       visibility: hidden;
+    }
+  }
+
+  @keyframes splash-logo {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @keyframes reveal-logo {
+    0%,
+    99% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes form-in {
+    from {
+      opacity: 0;
+      transform: translateX(-8rem);
     }
   }
 
@@ -126,10 +152,16 @@
     }
   }
 
+  /* Toast: entra deslizando da direita para a esquerda e sai em fade out. */
   @keyframes toast-in {
     from {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes toast-out {
+    to {
       opacity: 0;
-      transform: translateY(-0.5rem);
     }
   }
 }
@@ -205,6 +237,9 @@
    * - acima disso (monitores 2K/4K sem zoom do sistema): cresce na mesma
    *   proporção da largura, chegando a 32px em 3840px, ou seja, o layout do XD
    *   ampliado 2x em vez de "miniaturizado".
+   * - em telas ultrawide (proporção acima de 2:1) a altura também limita, com
+   *   referência 1920×1080 (100vh / 67,5): o layout não fica maior do que cabe
+   *   na tela, evitando rolagem à toa. O piso de 10px preserva a legibilidade.
    */
   html {
     font-size: 100%;
@@ -217,11 +252,30 @@
     }
   }
 
+  /* Proporção mais larga que 2:1 (janela útil, descontada a barra do navegador) */
+  @media (min-width: 120rem) and (min-aspect-ratio: 2/1) {
+    html {
+      font-size: clamp(0.625rem, min(calc(100vw / 120), calc(100vh / 67.5)), 2rem);
+    }
+  }
+
   body {
     background-color: var(--bg);
     color: var(--fg);
     font-family: var(--font-family-base);
     -webkit-font-smoothing: antialiased;
+    /* Sem seleção de texto na interface (evita arrastes acidentais nos cliques). */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Campos de digitação continuam selecionáveis, senão não dá para editar o texto. */
+  input,
+  textarea,
+  [contenteditable="true"] {
+    -webkit-user-select: text;
+    user-select: text;
   }
 
   /*
@@ -261,6 +315,7 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-delay: 0s !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }

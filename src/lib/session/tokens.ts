@@ -4,6 +4,8 @@
  */
 export const ACCESS_COOKIE = "wl_access";
 export const REFRESH_COOKIE = "wl_refresh";
+/** Query do login que marca sessão recusada pela API (o proxy limpa os cookies). */
+export const SESSION_LOST_PARAM = "expired";
 
 /** Margem para renovar o access token um pouco antes de ele vencer. */
 const EXPIRY_SKEW_SECONDS = 30;

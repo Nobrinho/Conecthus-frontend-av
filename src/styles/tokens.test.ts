@@ -24,7 +24,7 @@ function sourceFiles(dir: string): string[] {
 describe("tokens de tema", () => {
   it("nenhum componente usa cor crua", () => {
     const offenders = sourceFiles(SRC)
-      .map((file) => relative(SRC, file))
+      .map((file) => relative(SRC, file).replaceAll("\\", "/"))
       .filter((file) => !ALLOWED.has(file))
       .filter((file) => RAW_COLOR.test(readFileSync(join(SRC, file), "utf8")));
 

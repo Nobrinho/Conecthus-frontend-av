@@ -6,6 +6,7 @@ import {
   cookieOptionsFor,
   isTokenFresh,
   REFRESH_COOKIE,
+  SESSION_LOST_PARAM,
   type SessionTokens,
 } from "@/lib/session/tokens";
 
@@ -30,6 +31,16 @@ export async function proxy(request: NextRequest) {
 
   const access = request.cookies.get(ACCESS_COOKIE)?.value;
   const refresh = request.cookies.get(REFRESH_COOKIE)?.value;
+
+  // A API recusou o token (ex.: o usuário logado foi excluído): as páginas
+  // redirecionam ao login com este marcador. Sem tratá-lo aqui, o token ainda
+  // "fresco" no cookie levaria o login de volta à home, num loop de redirects.
+  if (isPublic && request.nextUrl.searchParams.get(SESSION_LOST_PARAM) === "1") {
+    const response = NextResponse.next();
+    response.cookies.delete(ACCESS_COOKIE);
+    response.cookies.delete(REFRESH_COOKIE);
+    return response;
+  }
 
   let tokens: SessionTokens | null = null;
   let loggedIn = isTokenFresh(access);

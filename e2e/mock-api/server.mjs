@@ -7,7 +7,7 @@ import { createServer } from "node:http";
 
 const port = Number(process.env.MOCK_API_PORT ?? 4010);
 const PREFIX = "/api/v1";
-const PAGE_SIZE = 15;
+const PAGE_SIZE = 10;
 const PASSWORD = "abc123";
 const RESET_TOKEN = "token-valido";
 

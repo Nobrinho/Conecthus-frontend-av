@@ -5,6 +5,7 @@ import type { z } from "zod";
 
 import { routes } from "@/config/routes";
 import { getAccessToken } from "@/lib/session";
+import { SESSION_LOST_PARAM } from "@/lib/session/tokens";
 
 import { ApiError } from "./errors";
 import { request, type RequestOptions } from "./http-client";
@@ -27,7 +28,9 @@ export async function authRequest<TSchema extends z.ZodType>(
       headers: { ...options.headers, Authorization: `Bearer ${token}` },
     });
   } catch (error) {
-    if (error instanceof ApiError && error.status === 401) redirect(routes.login);
+    if (error instanceof ApiError && error.status === 401) {
+      redirect(`${routes.login}?${SESSION_LOST_PARAM}=1`);
+    }
     throw error;
   }
 }

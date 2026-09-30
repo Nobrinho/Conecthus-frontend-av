@@ -38,10 +38,10 @@ describe("format", () => {
 
 describe("parsePageSize", () => {
   it.each([
-    [undefined, 15],
+    [undefined, 10],
     ["50", 50],
     ["100", 100],
-    ["20", 15],
-    ["abc", 15],
+    ["20", 10],
+    ["abc", 10],
   ])("%j → %j", (input, expected) => expect(parsePageSize(input)).toBe(expected));
 });

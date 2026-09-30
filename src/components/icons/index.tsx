@@ -157,13 +157,14 @@ export const SearchIcon = createIcon(
 
 /** Cadastrar. */
 export const PlusIcon = createIcon(
-  "1678 183.8 22.4 22.4",
-  <>
-    <g fill="currentColor" transform="translate(1677 183)">
-      <path d="M12.76 21.64a1.5 1.5 0 0 1-2.56-1.06V3.42a1.5 1.5 0 0 1 3 0v17.16q-.02.64-.44 1.06" />
-      <path d="M22.34 13.06a1.5 1.5 0 0 1-1.06.44H3.12a1.5 1.5 0 0 1 0-3h18.16a1.5 1.5 0 0 1 1.06 2.56" />
-    </g>
-  </>,
+  "0 0 24 24",
+  <path
+    d="M12 3v18M3 12h18"
+    stroke="currentColor"
+    strokeWidth="3"
+    strokeLinecap="round"
+    fill="none"
+  />,
 );
 
 /** Primeira página. */

@@ -25,7 +25,7 @@ export function sanitizeRegistration(value: string): string {
 }
 
 /** "Itens por página" da lista (o primeiro é o padrão). A API aceita até 100. */
-export const USERS_PAGE_SIZES = [15, 50, 80, 100] as const;
+export const USERS_PAGE_SIZES = [10, 50, 80, 100] as const;
 
 /** Lê `?limit=` aceitando só os tamanhos oferecidos. */
 export function parsePageSize(value: unknown): number {

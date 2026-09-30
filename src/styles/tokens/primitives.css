@@ -48,7 +48,7 @@
   --palette-red-500: #ff6b6a;
   --palette-red-600: #d93a39;
   --palette-red-800: #b00020; /* label e mensagem de erro dos campos */
-  --palette-orange-400: #f7a928; /* toast de cancelamento */
+  --palette-orange-400: #ff7700; /* toast de cancelamento */
 
   /* Tipografia */
   --font-family-base: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;

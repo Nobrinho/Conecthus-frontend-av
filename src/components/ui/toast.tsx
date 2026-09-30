@@ -16,6 +16,8 @@ interface ToastItem {
   id: number;
   tone: ToastTone;
   message: string;
+  /** Em fade out: sai da lista quando a animação termina. */
+  leaving?: boolean;
 }
 
 interface ToastApi {
@@ -28,15 +30,21 @@ interface ToastApi {
 const ToastContext = createContext<ToastApi | null>(null);
 
 const DURATION_MS = 4000;
+/** Tempo do fade out (`--duration-base`) antes de remover o toast da lista. */
+const LEAVE_MS = 250;
 
 const toastVariants = cva(
-  "animate-toast-in shadow-raised pointer-events-auto flex min-h-12 w-full items-center gap-3 px-4 py-2 text-base font-bold md:w-[24.1875rem]",
+  "shadow-raised pointer-events-auto flex rounded-md min-h-12 w-auto max-w-full items-center gap-3 px-4 py-2 text-base font-bold",
   {
     variants: {
       tone: {
         success: "bg-success text-success-fg",
         danger: "bg-danger text-danger-fg",
         warning: "bg-warning text-warning-fg",
+      },
+      leaving: {
+        false: "animate-toast-in",
+        true: "animate-toast-out pointer-events-none",
       },
     },
   },
@@ -55,7 +63,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const nextId = useRef(0);
 
   const dismiss = useCallback((id: number) => {
-    setItems((current) => current.filter((item) => item.id !== id));
+    setItems((current) =>
+      current.map((item) => (item.id === id ? { ...item, leaving: true } : item)),
+    );
+    setTimeout(() => setItems((current) => current.filter((item) => item.id !== id)), LEAVE_MS);
   }, []);
 
   const show = useCallback(
@@ -90,10 +101,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             <div
               key={item.id}
               role={item.tone === "danger" ? "alert" : "status"}
-              className={toastVariants({ tone: item.tone })}
+              className={toastVariants({ tone: item.tone, leaving: item.leaving ?? false })}
             >
               <Icon className="size-6 shrink-0" />
-              <p className="flex-1">{item.message}</p>
+              <p className="flex-1 md:whitespace-nowrap">{item.message}</p>
               <button
                 type="button"
                 onClick={() => dismiss(item.id)}

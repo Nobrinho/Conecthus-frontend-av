@@ -10,7 +10,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <>
       <Splash />
-      <AuthShell>
+      <AuthShell intro>
         <LoginForm next={typeof next === "string" ? next : null} />
       </AuthShell>
     </>

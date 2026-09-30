@@ -46,6 +46,8 @@ export default defineConfig({
     screenshot: "only-on-failure",
     locale: "pt-BR",
     timezoneId: "America/Sao_Paulo",
+    // Sem esperar a abertura animada do login e os fades dos toasts.
+    reducedMotion: "reduce",
   },
   projects: [
     {
