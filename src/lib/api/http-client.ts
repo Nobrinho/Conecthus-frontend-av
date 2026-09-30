@@ -1,6 +1,8 @@
+import "server-only";
+
 import type { z } from "zod";
 
-import { env } from "@/config/env";
+import { serverEnv } from "@/config/env.server";
 
 import { ApiError } from "./errors";
 
@@ -23,21 +25,17 @@ function buildUrl(path: string, baseUrl: string, query?: Query) {
 }
 
 /**
- * Cliente HTTP único da aplicação. Funciona em Server e Client Components,
- * valida a resposta com zod e padroniza erros em `ApiError`.
+ * Cliente HTTP único da aplicação. Roda só no servidor (Server Components,
+ * Server Actions e Route Handlers), valida a resposta com zod e padroniza
+ * erros em `ApiError`.
  */
 export async function request<TSchema extends z.ZodType>(
   path: string,
-  {
-    schema,
-    query,
-    body,
-    baseUrl = env.NEXT_PUBLIC_API_URL,
-    headers,
-    ...init
-  }: RequestOptions<TSchema>,
+  { schema, query, body, baseUrl = serverEnv.API_URL, headers, ...init }: RequestOptions<TSchema>,
 ): Promise<z.infer<TSchema>> {
   const response = await fetch(buildUrl(path, baseUrl, query), {
+    // Dados de usuário são sempre dinâmicos e por sessão: nada de cache.
+    cache: "no-store",
     ...init,
     headers: {
       Accept: "application/json",
