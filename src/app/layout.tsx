@@ -1,21 +1,13 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
 
 import { env } from "@/config/env";
 import { siteConfig } from "@/config/site";
+import { parseTheme, THEME_COOKIE } from "@/config/theme";
 import { AppProviders } from "@/providers";
 
+import { manrope } from "./fonts";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -26,10 +18,18 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export const viewport: Viewport = {
+  themeColor: "#0d1931",
+};
+
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // O tema escolhido vem do cookie, então o HTML já sai do servidor com o
+  // `data-theme` certo e não há flash de tema errado na carga.
+  const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
+
   return (
-    <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col font-sans">
+    <html lang="pt-BR" data-theme={theme} className={manrope.variable}>
+      <body className="min-h-dvh font-sans">
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
