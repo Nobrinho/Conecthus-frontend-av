@@ -9,7 +9,7 @@ test.describe("infra", () => {
   });
 
   test("proxy aplica os headers de segurança", async ({ request }) => {
-    const response = await request.get("/");
+    const response = await request.get("/login");
     const headers = response.headers();
 
     expect(headers["x-content-type-options"]).toBe("nosniff");
