@@ -116,6 +116,6 @@ describe("UserForm", () => {
     expect(await screen.findByText("Deseja cancelar?")).toBeInTheDocument();
     await ue.click(screen.getByRole("button", { name: "Sim" }));
     expect(push).toHaveBeenCalledWith("/usuarios");
-    expect(await screen.findByText("Cadastro Cancelado!")).toBeInTheDocument();
+    expect(await screen.findByText("Cadastro cancelado")).toBeInTheDocument();
   });
 });

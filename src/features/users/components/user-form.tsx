@@ -1,11 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useId, useState, useTransition } from "react";
 import { type Path, useForm } from "react-hook-form";
 
+import { BackIcon } from "@/components/icons";
 import {
   Breadcrumb,
   Button,
@@ -35,13 +35,13 @@ const COPY = {
     title: "Cadastro de Usuário",
     submit: "Cadastrar",
     success: "Cadastro Realizado!",
-    cancelled: "Cadastro Cancelado!",
+    cancelled: "Cadastro cancelado",
   },
   edit: {
     title: "Editar Usuário",
     submit: "Salvar",
-    success: "Edição Realizada!",
-    cancelled: "Edição Cancelada!",
+    success: "Dados salvos com sucesso!",
+    cancelled: "Edição cancelada",
   },
 } as const;
 
@@ -119,18 +119,18 @@ export function UserForm(props: UserFormProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col md:-mt-2.5">
       <Breadcrumb items={[{ label: "Usuários", href: routes.users }, { label: copy.title }]} />
-      <div className="flex items-center gap-2">
+      <div className="mt-1 flex items-center gap-2">
         <button
           type="button"
           onClick={requestCancel}
           aria-label="Voltar para a lista de usuários"
-          className="text-fg hover:bg-surface-muted -ml-2 grid size-10 place-items-center rounded-full"
+          className="text-fg hover:bg-control-hover -ml-2 grid size-10 place-items-center rounded-full transition-colors"
         >
-          <ChevronLeft className="size-7" />
+          <BackIcon className="h-6 w-auto" />
         </button>
-        <h1 id={headingId} className="text-3xl font-bold md:text-4xl">
+        <h1 id={headingId} className="md:text-title text-3xl font-bold">
           {copy.title}
         </h1>
       </div>
@@ -139,11 +139,11 @@ export function UserForm(props: UserFormProps) {
         onSubmit={onSubmit}
         noValidate
         aria-labelledby={headingId}
-        className="bg-surface shadow-card mt-1 flex flex-col gap-6 rounded-xs p-4 md:p-6"
+        className="bg-surface shadow-card mt-1.5 flex flex-col gap-10 rounded-[0.3125rem] px-4 pt-4 pb-6 md:-ml-[0.4375rem] md:px-[1.1875rem] md:pt-[1.125rem] md:pb-[1.5625rem]"
       >
-        <section aria-labelledby={userSectionId} className="flex flex-col gap-4">
+        <section aria-labelledby={userSectionId} className="flex flex-col gap-5">
           <SectionTitle id={userSectionId}>Dados do Usuário</SectionTitle>
-          <div className="grid gap-x-6 gap-y-2 md:grid-cols-2">
+          <div className="grid gap-x-[1.6875rem] gap-y-[2.1875rem] md:grid-cols-2">
             <TextField
               label="Nome Completo"
               placeholderLabel="Insira o nome completo"
@@ -187,9 +187,9 @@ export function UserForm(props: UserFormProps) {
           </div>
         </section>
 
-        <section aria-labelledby={accessSectionId} className="flex flex-col gap-4">
+        <section aria-labelledby={accessSectionId} className="flex flex-col gap-5">
           <SectionTitle id={accessSectionId}>Dados de acesso</SectionTitle>
-          <div className="grid gap-x-6 gap-y-2 md:grid-cols-2">
+          <div className="grid gap-x-[1.6875rem] gap-y-[2.1875rem] md:grid-cols-2">
             <TextField
               label="Senha"
               type="password"
@@ -218,11 +218,11 @@ export function UserForm(props: UserFormProps) {
           </div>
         </section>
 
-        <div className="flex flex-col-reverse gap-2 md:flex-row md:justify-end">
-          <Button variant="outline" onClick={requestCancel} className="md:min-w-28">
+        <div className="mt-2 flex flex-col-reverse gap-3 md:flex-row md:justify-end">
+          <Button variant="outline" onClick={requestCancel} className="md:min-w-[10.875rem]">
             Cancelar
           </Button>
-          <Button type="submit" disabled={!canSubmit} className="md:min-w-28">
+          <Button type="submit" disabled={!canSubmit} className="md:min-w-[10.875rem]">
             {pending ? "Salvando..." : copy.submit}
           </Button>
         </div>

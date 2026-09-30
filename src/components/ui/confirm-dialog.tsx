@@ -32,18 +32,18 @@ export function ConfirmDialog({
 
   return (
     <Dialog open={open} onClose={onCancel} labelledBy={titleId} describedBy={descriptionId}>
-      <div className="flex flex-col items-center gap-3 px-6 py-8 text-center">
-        <h2 id={titleId} className="text-xl font-bold">
+      <div className="flex min-h-[15.625rem] flex-col items-center justify-center px-6 py-8 text-center">
+        <h2 id={titleId} className="text-heading font-bold">
           {title}
         </h2>
-        <p id={descriptionId} className="text-sm">
+        <p id={descriptionId} className="mt-4 text-lg font-medium">
           {description}
         </p>
-        <div className="mt-4 flex gap-2">
-          <Button variant="outline" size="sm" className="min-w-20" onClick={onCancel} autoFocus>
+        <div className="mt-8 flex gap-2">
+          <Button variant="outline" className="min-w-[7.875rem]" onClick={onCancel} autoFocus>
             {cancelLabel}
           </Button>
-          <Button size="sm" className="min-w-20" onClick={onConfirm} disabled={pending}>
+          <Button className="min-w-[7.75rem]" onClick={onConfirm} disabled={pending}>
             {confirmLabel}
           </Button>
         </div>

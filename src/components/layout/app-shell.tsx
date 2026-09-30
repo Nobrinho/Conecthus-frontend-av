@@ -38,8 +38,7 @@ export function AppShell({ user, theme, sidebarCollapsed, logoutAction, children
     if (!mobileOpen && dialog.open) dialog.close();
   }, [mobileOpen]);
 
-  function toggleCollapsed() {
-    const next = !collapsed;
+  function setCollapsedAndSave(next: boolean) {
     setCollapsed(next);
     saveSidebarCollapsed(next);
   }
@@ -56,10 +55,14 @@ export function AppShell({ user, theme, sidebarCollapsed, logoutAction, children
       <aside
         className={cn(
           "sticky top-0 z-30 hidden h-dvh shrink-0 transition-[width] duration-200 md:block",
-          collapsed ? "w-[4.5rem]" : "w-[15rem] xl:w-[16.5rem]",
+          collapsed ? "w-[7.3125rem]" : "w-[17rem] lg:w-[21rem]",
         )}
       >
-        <Sidebar collapsed={collapsed} onToggleCollapsed={toggleCollapsed} />
+        <Sidebar
+          collapsed={collapsed}
+          onToggleCollapsed={() => setCollapsedAndSave(!collapsed)}
+          onExpand={() => setCollapsedAndSave(false)}
+        />
       </aside>
 
       <dialog
@@ -67,13 +70,13 @@ export function AppShell({ user, theme, sidebarCollapsed, logoutAction, children
         aria-label="Menu"
         onClose={() => setMobileOpen(false)}
         onClick={(event) => event.target === event.currentTarget && setMobileOpen(false)}
-        className="backdrop:bg-overlay m-0 h-dvh max-h-dvh w-[17rem] max-w-[85vw] p-0 md:hidden"
+        className="drawer-slide-left m-0 h-dvh max-h-dvh w-[21rem] max-w-[85vw] p-0 md:hidden"
       >
-        {mobileOpen && <Sidebar collapsed={false} onNavigate={() => setMobileOpen(false)} />}
+        <Sidebar collapsed={false} onNavigate={() => setMobileOpen(false)} />
       </dialog>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="bg-surface shadow-card sticky top-0 z-20 flex h-16 items-center justify-between gap-4 px-4 md:h-20 md:justify-end md:px-8">
+        <header className="bg-surface shadow-card sticky top-0 z-20 flex h-16 items-center justify-between gap-4 px-4 md:h-[5.25rem] md:justify-end md:pr-[3.8125rem]">
           <div className="flex items-center gap-2 md:hidden">
             <button
               type="button"
@@ -84,13 +87,16 @@ export function AppShell({ user, theme, sidebarCollapsed, logoutAction, children
             >
               <Menu className="size-6" />
             </button>
-            <Logo className="text-2xl" />
+            <Logo className="text-fg h-7" />
           </div>
           <UserMenu user={user} theme={theme} logoutAction={logoutAction} />
         </header>
 
-        <main id="conteudo" className="flex flex-1 flex-col px-4 py-5 md:px-8 md:py-6">
-          <div className="mx-auto flex w-full max-w-[100rem] flex-1 flex-col">{children}</div>
+        <main
+          id="conteudo"
+          className="flex flex-1 flex-col px-4 py-5 md:pt-[1.3125rem] md:pr-11 md:pb-5 md:pl-[2.875rem]"
+        >
+          <div className="flex w-full flex-1 flex-col">{children}</div>
         </main>
       </div>
     </div>

@@ -25,29 +25,60 @@
   --color-fg-muted: var(--fg-muted);
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
+  --color-brand-hover-strong: var(--brand-hover-strong);
+  --color-brand-soft: var(--brand-soft);
   --color-brand-fg: var(--brand-fg);
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
+  --color-logo-ink: var(--logo-ink);
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);
   --color-focus: var(--focus);
+  --color-field-border: var(--field-border);
+  --color-field-border-active: var(--field-border-active);
+  --color-search-border: var(--search-border);
+  --color-control-hover: var(--control-hover);
+  --color-disabled: var(--disabled);
+  --color-disabled-fg: var(--disabled-fg);
+  --color-outline-strong: var(--outline-strong);
   --color-chrome: var(--chrome);
   --color-chrome-fg: var(--chrome-fg);
   --color-chrome-muted: var(--chrome-muted);
+  --color-chrome-hover: var(--chrome-hover);
+  --color-chrome-selected: var(--chrome-selected);
+  --color-chrome-selected-fg: var(--chrome-selected-fg);
   --color-success: var(--success);
   --color-success-fg: var(--success-fg);
   --color-danger: var(--danger);
   --color-danger-fg: var(--danger-fg);
+  --color-danger-text: var(--danger-text);
+  --color-danger-surface: var(--danger-surface);
   --color-warning: var(--warning);
   --color-warning-fg: var(--warning-fg);
 
   --font-sans: var(--font-family-base);
+
+  /*
+   * Tamanhos de texto do XD (px do artboard ÷ 16). Complementam a escala
+   * padrão do Tailwind (xs=12, sm=14, base=16, lg=18, 2xl=24, 3xl=30...).
+   */
+  --text-2xs: 0.625rem; /* 10: dicas e trilha */
+  --text-2xs--line-height: 0.875rem;
+  --text-title: 2.375rem; /* 38: título das páginas */
+  --text-title--line-height: 3.25rem;
+  --text-display: 4rem; /* 64: "Bem-vindo!" */
+  --text-display--line-height: 5.5rem;
+  --text-hello: 2rem; /* 32: "Olá Millena!" */
+  --text-welcome: 1.75rem; /* 28: "Bem-vindo ao WenLock!" */
+  --text-heading: 1.625rem; /* 26: títulos de modal e subtítulos */
+  --text-heading--line-height: 2.25rem;
 
   --radius-*: initial;
   --radius-xs: var(--radius-scale-xs);
   --radius-sm: var(--radius-scale-sm);
   --radius-md: var(--radius-scale-md);
   --radius-lg: var(--radius-scale-lg);
+  --radius-xl: var(--radius-scale-xl);
   --radius-full: 9999px;
 
   --shadow-*: initial;
@@ -65,6 +96,7 @@
   --animate-progress: progress 1.4s var(--easing-standard) forwards;
   --animate-splash: splash 1.6s var(--easing-standard) forwards;
   --animate-toast-in: toast-in var(--duration-base) var(--easing-standard);
+  --animate-balloon-in: balloon-in var(--duration-fast) var(--easing-standard);
 
   @keyframes progress {
     from {
@@ -87,10 +119,80 @@
     }
   }
 
+  @keyframes balloon-in {
+    from {
+      opacity: 0;
+      transform: translateY(-0.25rem);
+    }
+  }
+
   @keyframes toast-in {
     from {
       opacity: 0;
       transform: translateY(-0.5rem);
+    }
+  }
+}
+
+@layer components {
+  /* Modal central: surge com um leve zoom. */
+  .dialog-pop {
+    opacity: 0;
+    scale: 0.96;
+    transition:
+      opacity var(--duration-base) var(--easing-standard),
+      scale var(--duration-base) var(--easing-standard),
+      overlay var(--duration-base) allow-discrete,
+      display var(--duration-base) allow-discrete;
+  }
+
+  .dialog-pop[open] {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @starting-style {
+    .dialog-pop[open] {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+
+  /* Painel lateral: desliza da direita. */
+  .drawer-slide {
+    translate: 100% 0;
+    transition:
+      translate var(--duration-slow) var(--easing-standard),
+      overlay var(--duration-slow) allow-discrete,
+      display var(--duration-slow) allow-discrete;
+  }
+
+  .drawer-slide[open] {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .drawer-slide[open] {
+      translate: 100% 0;
+    }
+  }
+
+  /* Menu no celular: desliza da esquerda. */
+  .drawer-slide-left {
+    translate: -100% 0;
+    transition:
+      translate var(--duration-base) var(--easing-standard),
+      overlay var(--duration-base) allow-discrete,
+      display var(--duration-base) allow-discrete;
+  }
+
+  .drawer-slide-left[open] {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    .drawer-slide-left[open] {
+      translate: -100% 0;
     }
   }
 }
@@ -120,6 +222,33 @@
     color: var(--fg);
     font-family: var(--font-family-base);
     -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+   * Modais e painel lateral (`<dialog>`): o conteúdo atrás fica desfocado,
+   * como no XD. A entrada/saída anima só com CSS (`@starting-style` +
+   * `allow-discrete`), sem atrasar o fechamento no JavaScript.
+   */
+  dialog::backdrop {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+    transition:
+      background-color var(--duration-base) var(--easing-standard),
+      backdrop-filter var(--duration-base) var(--easing-standard),
+      overlay var(--duration-base) allow-discrete,
+      display var(--duration-base) allow-discrete;
+  }
+
+  dialog[open]::backdrop {
+    background-color: var(--overlay);
+    backdrop-filter: blur(var(--overlay-blur));
+  }
+
+  @starting-style {
+    dialog[open]::backdrop {
+      background-color: transparent;
+      backdrop-filter: blur(0);
+    }
   }
 
   :focus-visible {

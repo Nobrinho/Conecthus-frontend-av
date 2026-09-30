@@ -21,6 +21,21 @@ test.describe("login", () => {
     await expect(
       page.getByRole("alert").filter({ hasText: "Usuário/Senha inválido(a)" }),
     ).toBeVisible();
+    // Os dois campos ficam em vermelho, como no XD; editar tira o erro do campo.
+    await expect(page.getByLabel("Usuário")).toHaveAttribute("aria-invalid", "true");
+    await expect(page.getByLabel("Senha", { exact: true })).toHaveAttribute("aria-invalid", "true");
+    await page.getByLabel("Usuário").fill(DEMO.registration);
+    await expect(page.getByLabel("Usuário")).not.toHaveAttribute("aria-invalid");
+  });
+
+  test("o menu do avatar abre ao passar o mouse", async ({ page }) => {
+    await login(page);
+    const avatar = page.getByRole("button", { name: /Menu de/ });
+    await avatar.hover();
+    await expect(avatar).toHaveAttribute("aria-expanded", "true");
+    await expect(page.getByRole("button", { name: "Sair" })).toBeVisible();
+    await page.mouse.move(10, 600);
+    await expect(avatar).toHaveAttribute("aria-expanded", "false");
   });
 
   test("entra por e-mail, mostra o toast e a Home com o nome", async ({ page }) => {

@@ -17,6 +17,7 @@ export interface DialogProps {
 /**
  * Modal sobre o `<dialog>` nativo: `showModal()` já entrega foco preso,
  * fundo inerte, fechamento com Esc e retorno do foco ao elemento que abriu.
+ * O fundo é desfocado e a entrada/saída anima só com CSS (`dialog-pop`).
  */
 export function Dialog({
   open,
@@ -38,8 +39,10 @@ export function Dialog({
   return (
     <dialog
       ref={ref}
-      aria-labelledby={labelledBy}
-      aria-describedby={describedBy}
+      // Fechado, o conteúdo segue montado (para animar a saída), mas sem nome
+      // acessível, para não competir com os rótulos da página.
+      aria-labelledby={open ? labelledBy : undefined}
+      aria-describedby={open ? describedBy : undefined}
       onClose={onClose}
       onCancel={(event) => {
         event.preventDefault();
@@ -50,12 +53,12 @@ export function Dialog({
         if (event.target === event.currentTarget) onClose();
       }}
       className={cn(
-        "bg-surface text-fg shadow-overlay m-auto rounded-xs p-0",
-        "backdrop:bg-overlay max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-md",
+        "dialog-pop bg-surface text-fg shadow-overlay m-auto rounded-md p-0",
+        "max-h-[calc(100dvh-2rem)] w-[calc(100vw-2rem)] max-w-[29.875rem]",
         className,
       )}
     >
-      {open && children}
+      {children}
     </dialog>
   );
 }

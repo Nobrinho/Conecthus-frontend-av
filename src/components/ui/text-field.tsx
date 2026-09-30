@@ -1,8 +1,8 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
 import { useId, useState } from "react";
 
+import { PasswordHideIcon, PasswordShowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 export interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> {
@@ -15,33 +15,68 @@ export interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInput
   placeholderLabel?: string;
   /** Dica fixa exibida abaixo do campo, como "Máx. 30 caracteres". */
   hint?: string;
+  /** Mensagem de erro exibida abaixo do campo (também marca o campo como inválido). */
   error?: string;
+  /**
+   * Marca o campo como inválido sem mensagem própria (ex.: login recusado,
+   * quando a mensagem já está no toast).
+   */
+  invalid?: boolean;
+  /**
+   * - `filled` (padrão): fundo cinza e traço inferior, dos formulários de usuário;
+   * - `outlined`: caixa branca com borda, das telas de acesso (login, recuperação).
+   */
+  appearance?: "filled" | "outlined";
   /** Mostra o botão de exibir/ocultar senha. */
   revealable?: boolean;
   ref?: React.Ref<HTMLInputElement>;
 }
 
 /*
- * O campo "flutua" o label quando tem foco ou valor. Como os inputs usam
+ * O label "flutua" quando o campo tem foco ou valor. Como os inputs usam
  * `placeholder=" "`, `:placeholder-shown` indica campo vazio sem depender de JS.
+ * (As classes ficam escritas por extenso para o Tailwind encontrá-las.)
  */
-const FLOATING_LABEL =
-  "group-focus-within:top-3.5 group-focus-within:text-xs group-focus-within:font-semibold " +
-  "group-has-[input:not(:placeholder-shown)]:top-3.5 group-has-[input:not(:placeholder-shown)]:text-xs group-has-[input:not(:placeholder-shown)]:font-semibold";
 const WHEN_FLOATING_SHOW =
   "hidden group-focus-within:inline group-has-[input:not(:placeholder-shown)]:inline";
 const WHEN_FLOATING_HIDE =
   "group-focus-within:hidden group-has-[input:not(:placeholder-shown)]:hidden";
+const LABEL_ACTIVE_COLOR =
+  "group-focus-within:text-brand group-has-[input:not(:placeholder-shown)]:text-brand";
+
+const appearances = {
+  filled: {
+    box: "bg-surface-muted h-14 rounded-sm border-b-2 border-transparent",
+    boxActive: "focus-within:border-brand has-[input:not(:placeholder-shown)]:border-brand",
+    boxError: "border-b-danger-text",
+    input: "px-4 pt-5 pb-1 text-lg",
+    label:
+      "left-4 text-lg group-focus-within:top-4 group-focus-within:text-xs group-focus-within:font-semibold " +
+      "group-has-[input:not(:placeholder-shown)]:top-4 group-has-[input:not(:placeholder-shown)]:text-xs group-has-[input:not(:placeholder-shown)]:font-semibold",
+  },
+  outlined: {
+    box: "bg-surface border-field-border h-[4.25rem] rounded-md border-2",
+    boxActive:
+      "focus-within:border-field-border-active has-[input:not(:placeholder-shown)]:border-field-border-active",
+    boxError: "bg-danger-surface rounded-b-none border-transparent border-b-danger-text",
+    input: "px-4 pt-6 pb-1.5 text-lg font-medium",
+    label:
+      "left-4 text-lg font-medium group-focus-within:top-5 group-focus-within:text-sm " +
+      "group-has-[input:not(:placeholder-shown)]:top-5 group-has-[input:not(:placeholder-shown)]:text-sm",
+  },
+};
 
 /**
- * Campo de texto do protótipo: fundo cinza, label flutuante, traço inferior na
- * cor da marca quando ativo/preenchido e vermelho quando há erro.
+ * Campo de texto do protótipo, com label flutuante e os estados do XD:
+ * padrão, ativo/preenchido e erro (label, traço e mensagem em vermelho).
  */
 export function TextField({
   label,
   placeholderLabel,
   hint,
   error,
+  invalid,
+  appearance = "filled",
   revealable,
   type = "text",
   className,
@@ -55,17 +90,18 @@ export function TextField({
   const hintId = `${inputId}-hint`;
   const errorId = `${inputId}-error`;
   const [revealed, setRevealed] = useState(false);
+  const styles = appearances[appearance];
+  const hasError = Boolean(error) || Boolean(invalid);
 
   const describedBy = [error ? errorId : null, hint ? hintId : null].filter(Boolean).join(" ");
 
   return (
-    <div className={cn("flex flex-col gap-1", className)}>
+    <div className={cn("relative flex flex-col", className)}>
       <div
         className={cn(
-          "group bg-surface-muted relative flex items-center rounded-t-xs border-b-2 border-transparent transition-colors",
-          error
-            ? "border-danger"
-            : "focus-within:border-brand has-[input:not(:placeholder-shown)]:border-brand",
+          "group relative flex items-center transition-colors",
+          styles.box,
+          hasError ? styles.boxError : styles.boxActive,
         )}
       >
         <input
@@ -75,19 +111,17 @@ export function TextField({
           placeholder=" "
           required={required}
           aria-label={placeholderLabel ? label : undefined}
-          aria-invalid={error ? true : undefined}
+          aria-invalid={hasError || undefined}
           aria-describedby={describedBy || undefined}
-          className="text-fg h-14 w-full min-w-0 bg-transparent px-3 pt-5 pb-1.5 text-base outline-none"
+          className={cn("text-fg h-full w-full min-w-0 bg-transparent outline-none", styles.input)}
           {...props}
         />
         <label
           htmlFor={inputId}
           className={cn(
-            "text-fg-muted pointer-events-none absolute top-1/2 left-3 max-w-[calc(100%-1.5rem)] -translate-y-1/2 truncate text-base transition-all",
-            FLOATING_LABEL,
-            error
-              ? "group-focus-within:text-danger group-has-[input:not(:placeholder-shown)]:text-danger"
-              : "group-focus-within:text-brand group-has-[input:not(:placeholder-shown)]:text-brand",
+            "text-fg-muted pointer-events-none absolute top-1/2 max-w-[calc(100%-2rem)] -translate-y-1/2 truncate transition-all",
+            styles.label,
+            hasError ? "text-danger-text" : LABEL_ACTIVE_COLOR,
           )}
         >
           {placeholderLabel ? (
@@ -113,26 +147,33 @@ export function TextField({
             onClick={() => setRevealed((value) => !value)}
             aria-label={revealed ? "Ocultar senha" : "Mostrar senha"}
             aria-pressed={revealed}
-            className="text-fg-muted hover:text-fg mr-1 grid size-10 shrink-0 place-items-center rounded-full"
+            className="text-fg-muted hover:text-fg mr-2 grid size-10 shrink-0 place-items-center rounded-full"
           >
-            {revealed ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+            {revealed ? (
+              <PasswordHideIcon className="size-6" />
+            ) : (
+              <PasswordShowIcon className="size-6" />
+            )}
           </button>
         )}
       </div>
-      <div className="flex min-h-4 items-start justify-between gap-3">
-        {error ? (
-          <p id={errorId} className="text-danger text-xs font-medium">
-            {error}
-          </p>
-        ) : (
-          <span />
-        )}
-        {hint && (
-          <p id={hintId} className="text-fg-muted shrink-0 text-right text-[0.625rem] leading-4">
-            {hint}
-          </p>
-        )}
-      </div>
+      {(error || hint) && (
+        // Fica sob o campo sem empurrar o layout (os formulários reservam o espaço).
+        <div className="absolute inset-x-0 top-full flex items-start justify-between gap-3 pt-0.5">
+          {error ? (
+            <p id={errorId} className="text-danger-text text-xs font-medium">
+              {error}
+            </p>
+          ) : (
+            <span />
+          )}
+          {hint && (
+            <p id={hintId} className="text-fg text-2xs shrink-0 text-right font-medium">
+              {hint}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

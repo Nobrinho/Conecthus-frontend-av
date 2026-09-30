@@ -8,12 +8,13 @@ export function initialsOf(name: string): string {
   return `${first}${last}`.toUpperCase();
 }
 
+/** Avatar com iniciais (o protótipo usa foto; aqui as iniciais fazem esse papel). */
 export function Avatar({ name, className }: { name: string; className?: string }) {
   return (
     <span
       aria-hidden
       className={cn(
-        "bg-chrome text-chrome-fg ring-accent grid size-10 place-items-center rounded-full text-sm font-bold ring-2",
+        "bg-chrome text-chrome-fg grid size-[3.125rem] shrink-0 place-items-center rounded-full text-base font-bold",
         className,
       )}
     >

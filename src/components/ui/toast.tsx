@@ -1,8 +1,14 @@
 "use client";
 
 import { cva } from "class-variance-authority";
-import { AlertCircle, CheckCircle2, TriangleAlert, X } from "lucide-react";
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
+
+import {
+  ToastCloseIcon,
+  ToastErrorIcon,
+  ToastSuccessIcon,
+  ToastWarningIcon,
+} from "@/components/icons";
 
 export type ToastTone = "success" | "danger" | "warning";
 
@@ -24,7 +30,7 @@ const ToastContext = createContext<ToastApi | null>(null);
 const DURATION_MS = 4000;
 
 const toastVariants = cva(
-  "animate-toast-in shadow-raised pointer-events-auto flex w-full items-center gap-3 px-4 py-3 text-sm font-bold md:w-[22rem]",
+  "animate-toast-in shadow-raised pointer-events-auto flex min-h-12 w-full items-center gap-3 px-4 py-2 text-base font-bold md:w-[24.1875rem]",
   {
     variants: {
       tone: {
@@ -36,7 +42,7 @@ const toastVariants = cva(
   },
 );
 
-const icons = { success: CheckCircle2, danger: AlertCircle, warning: TriangleAlert };
+const icons = { success: ToastSuccessIcon, danger: ToastErrorIcon, warning: ToastWarningIcon };
 
 /**
  * Toasts do protótipo: faixa colorida no canto superior direito, com ícone e
@@ -76,7 +82,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       {children}
       <div
         aria-live="polite"
-        className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col items-end gap-2 md:top-8"
+        className="pointer-events-none fixed inset-x-0 top-0 z-50 flex flex-col items-end gap-2 md:top-[3.0625rem]"
       >
         {items.map((item) => {
           const Icon = icons[item.tone];
@@ -86,7 +92,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               role={item.tone === "danger" ? "alert" : "status"}
               className={toastVariants({ tone: item.tone })}
             >
-              <Icon aria-hidden className="size-5 shrink-0" />
+              <Icon className="size-6 shrink-0" />
               <p className="flex-1">{item.message}</p>
               <button
                 type="button"
@@ -94,7 +100,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 aria-label="Fechar aviso"
                 className="grid size-7 place-items-center rounded-full hover:bg-current/10"
               >
-                <X className="size-5" />
+                <ToastCloseIcon className="size-3.5" />
               </button>
             </div>
           );

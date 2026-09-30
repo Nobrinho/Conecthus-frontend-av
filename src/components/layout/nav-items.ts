@@ -1,16 +1,17 @@
-import { ChartPie, IdCard, type LucideIcon, UserRound } from "lucide-react";
-
+import { AccessControlIcon, HomeIcon, type IconProps, UserIcon } from "@/components/icons";
 import { routes } from "@/config/routes";
+
+type Icon = (props: IconProps) => React.ReactNode;
 
 export interface NavLink {
   label: string;
   href: string;
-  icon: LucideIcon;
+  icon: Icon;
 }
 
 export interface NavGroup {
   label: string;
-  icon: LucideIcon;
+  icon: Icon;
   children: NavLink[];
 }
 
@@ -18,11 +19,11 @@ export type NavItem = NavLink | NavGroup;
 
 /** Menu lateral do protótipo. */
 export const navItems: NavItem[] = [
-  { label: "Home", href: routes.home, icon: ChartPie },
+  { label: "Home", href: routes.home, icon: HomeIcon },
   {
     label: "Controle de Acesso",
-    icon: IdCard,
-    children: [{ label: "Usuários", href: routes.users, icon: UserRound }],
+    icon: AccessControlIcon,
+    children: [{ label: "Usuários", href: routes.users, icon: UserIcon }],
   },
 ];
 

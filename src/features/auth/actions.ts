@@ -19,6 +19,7 @@ import {
 } from "./types";
 
 const GENERIC_ERROR = "Não foi possível concluir. Tente novamente.";
+const INVALID_CREDENTIALS = "Usuário/Senha inválido(a)";
 
 export async function loginAction(input: LoginInput): Promise<ActionResult<{ name: string }>> {
   const parsed = loginSchema.safeParse(input);
@@ -32,7 +33,11 @@ export async function loginAction(input: LoginInput): Promise<ActionResult<{ nam
     return ok({ name: user.name });
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
-      return fail("Usuário/Senha inválido(a)");
+      // Os dois campos ficam em vermelho, como na tela de login inválido do XD.
+      return fail(INVALID_CREDENTIALS, {
+        login: [INVALID_CREDENTIALS],
+        password: [INVALID_CREDENTIALS],
+      });
     }
     if (error instanceof ApiError && error.status === 429) {
       return fail("Muitas tentativas. Aguarde um minuto e tente de novo.");
@@ -62,7 +67,8 @@ export async function forgotPasswordAction(input: ForgotPasswordInput): Promise<
     await authApi.forgotPassword(parsed.data);
     return ok(undefined);
   } catch (error) {
-    if (error instanceof ApiError && error.status === 404) return fail("E-mail não cadastrado");
+    if (error instanceof ApiError && error.status === 404)
+      return fail("E-mail não cadastrado. Contate o admin");
     if (error instanceof ApiError && error.status === 429) {
       return fail("Muitas tentativas. Aguarde um minuto e tente de novo.");
     }

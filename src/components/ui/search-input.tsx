@@ -1,7 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
-
+import { CloseIcon, SearchIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 export interface SearchInputProps extends Omit<
@@ -13,6 +12,7 @@ export interface SearchInputProps extends Omit<
   label?: string;
 }
 
+/** Pesquisa do protótipo: caixa branca com borda fina; hover cinza; ativa com a borda escura. */
 export function SearchInput({
   value,
   onValueChange,
@@ -23,20 +23,20 @@ export function SearchInput({
   return (
     <div
       className={cn(
-        "bg-surface shadow-card relative flex h-11 items-center gap-2 rounded-xs border border-transparent px-3",
-        "focus-within:border-brand",
+        "bg-surface shadow-card border-search-border relative flex h-14 items-center gap-2 rounded-[0.4375rem] border px-4",
+        "hover:bg-control-hover focus-within:border-brand focus-within:bg-surface transition-colors",
         value && "border-brand",
         className,
       )}
     >
-      <Search aria-hidden className="text-fg size-4 shrink-0" />
+      <SearchIcon className="text-fg size-6 shrink-0" />
       <input
         type="search"
         aria-label={label}
         placeholder={label}
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
-        className="text-fg placeholder:text-fg-muted h-full w-full min-w-0 bg-transparent text-sm outline-none [&::-webkit-search-cancel-button]:hidden"
+        className="text-fg placeholder:text-fg h-full w-full min-w-0 bg-transparent text-base font-medium outline-none [&::-webkit-search-cancel-button]:hidden"
         {...props}
       />
       {value && (
@@ -44,9 +44,9 @@ export function SearchInput({
           type="button"
           onClick={() => onValueChange("")}
           aria-label="Limpar pesquisa"
-          className="text-fg-muted hover:text-fg grid size-7 place-items-center rounded-full"
+          className="text-fg-muted hover:text-fg grid size-8 shrink-0 place-items-center rounded-full"
         >
-          <X className="size-4" />
+          <CloseIcon className="size-3.5" />
         </button>
       )}
     </div>
